@@ -1,0 +1,33 @@
+{
+    "version": "0.0.2f1",
+    "isEnabled": true,
+    "isMaintenance": false,
+    "canPurchase": true,
+    "isAdEnabled": true,
+    "availablePurchases": [
+        {
+            "id": 1,
+            "productType": "NonConsumable",
+            "productId": "noas.poker.calculator.super.holdthem_00A",
+            "name": "",
+            "description": "",
+            "step": 5
+        },
+        {
+            "id": 1,
+            "productType": "NonConsumable",
+            "productId": "noas.poker.calculator.super.holdthem_00B",
+            "name": "",
+            "description": "",
+            "step": 5
+        },
+        {
+            "id": 1,
+            "productType": "NonConsumable",
+            "productId": "noas.poker.calculator.super.holdthem_00C",
+            "name": "",
+            "description": "",
+            "step": 5
+        }
+    ]
+}
