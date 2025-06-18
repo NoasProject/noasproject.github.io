@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "0.0.2f1",
     "isEnabled": true,
     "isMaintenance": false,
     "canPurchase": true,
@@ -9,25 +9,10 @@
             "id": 1,
             "productType": "NonConsumable",
             "productId": "noas.poker.calculator.super.holdthem_00A",
-            "name": "",
-            "description": "",
-            "step": 5
-        },
-        {
-            "id": 1,
-            "productType": "NonConsumable",
-            "productId": "noas.poker.calculator.super.holdthem_00B",
-            "name": "",
-            "description": "",
-            "step": 5
-        },
-        {
-            "id": 1,
-            "productType": "NonConsumable",
-            "productId": "noas.poker.calculator.super.holdthem_00C",
-            "name": "",
-            "description": "",
-            "step": 5
+            "name": "解放パックA",
+            "description": "・動画広告のスキップ\n・保存容量の増加",
+            "step": 5,
+            "isEnabled": true
         }
     ]
 }
