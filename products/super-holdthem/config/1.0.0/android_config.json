@@ -12,7 +12,7 @@
             "productType": "NonConsumable",
             "productId": "noas.poker.calculator.super.holdthem_00A",
             "name": "解放パックA",
-            "description": "・保存容量の増加",
+            "description": "・動画広告のスキップ\n・保存容量の増加",
             "step": 5,
             "isEnabled": true
         }
