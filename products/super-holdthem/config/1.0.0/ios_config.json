@@ -1,6 +1,5 @@
 {
     "version": "1.0.0-a2",
-    "price": 720,
     "isEnabled": true,
     "isMaintenance": false,
     "canPurchase": true,
@@ -9,6 +8,7 @@
     "availablePurchases": [
         {
             "id": 1,
+            "price": 720,
             "productType": "NonConsumable",
             "productId": "noas.poker.calculator.super.holdthem_00A",
             "name": "解放パックA",
