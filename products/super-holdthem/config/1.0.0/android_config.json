@@ -1,11 +1,11 @@
 {
-    "version": "1.0.0-a",
+    "version": "1.0.0-a2",
     "price": 720,
     "isEnabled": true,
     "isMaintenance": false,
     "canPurchase": true,
-    "isAdEnabled": false,
-    "isOutsDisabled": true,
+    "isAdEnabled": true,
+    "isOutsDisabled": false,
     "availablePurchases": [
         {
             "id": 1,
