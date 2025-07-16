@@ -1,6 +1,6 @@
 {
     "version": "1.0.1-a1",
-    "isEnabled": true,
+    "isEnabled": false,
     "isMaintenance": false,
     "canPurchase": true,
     "isAdEnabled": true,
