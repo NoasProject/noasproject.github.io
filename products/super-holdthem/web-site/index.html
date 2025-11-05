@@ -102,7 +102,7 @@
       <h2>主な機能</h2>
       <div class="grid">
         <div class="card"><h3>瞬時計算</h3><p>端末上で軽快にエクイティ算出。対戦中の判断をサポートします</p></div>
-        <div class="card"><h3>直感UI</h3><p>カード入力やボード編集をわかりやすく設計。初心者でもすぐ使えます</p></div>
+        <div class="card"><h3>直感的なUI</h3><p>カード入力やボード編集をわかりやすく設計。初心者でもすぐ使えます</p></div>
         <div class="card"><h3>学習に最適</h3><p>NLHからSuperHold'emへの橋渡しに。レンジ練習や戦略の基準へ</p></div>
         <div class="card"><h3>プライバシー配慮</h3><p>計算した結果は端末内に保存し、外部に送信することはありません</p></div>
         <div class="card"><h3>iPad対応</h3><p>大画面での検討・学習に対応。ユニバーサルアプリ</p></div>
@@ -132,5 +132,92 @@
       </div>
     </footer>
   </div>
+
+<!-- === i18n: language switch & script (non-destructive) === -->
+<style>
+  #langSwitch {
+    position: fixed;
+    top: 14px; right: 14px;
+    display: flex; gap: 8px; z-index: 99999;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans JP, Helvetica, Arial;
+  }
+  #langSwitch button {
+    padding: 6px 10px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.3);
+    background: rgba(0,0,0,.35); color: #fff; cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+  #langSwitch button[data-active="true"]{
+    background: rgba(134,239,172,.25);
+    border-color: rgba(134,239,172,.5);
+    color: #eafff0;
+  }
+</style>
+<div id="langSwitch" aria-label="Language Switch">
+  <button id="btnJA" type="button" data-active="true">日本語</button>
+  <button id="btnEN" type="button">EN</button>
+</div>
+
+<script>
+(function(){
+  const storeKey = "lang";
+  const I18N = {
+    en: { },
+    ja: { },
+  };
+
+  function setActive(lang){
+    const bJA = document.getElementById('btnJA');
+    const bEN = document.getElementById('btnEN');
+    if (bJA && bEN){
+      bJA.dataset.active = (lang === 'ja');
+      bEN.dataset.active = (lang === 'en');
+    }
+  }
+
+  function applyLang(lang){
+    document.querySelectorAll('[data-i18n-ja], [data-i18n-en]').forEach(el => {
+      const ja = el.getAttribute('data-i18n-ja');
+      const en = el.getAttribute('data-i18n-en');
+      if (lang === 'en' && en != null) {
+        el.innerHTML = en;
+      } else if (lang === 'ja' && ja != null) {
+        el.innerHTML = ja;
+      }
+    });
+
+    const dict = (lang === 'en') ? I18N.en : I18N.ja;
+    if (dict){
+      for (const sel in dict){
+        try{
+          const nodes = document.querySelectorAll(sel);
+          nodes.forEach(n => n.innerHTML = dict[sel]);
+        }catch(e){}
+      }
+    }
+
+    document.documentElement.setAttribute('lang', lang);
+    localStorage.setItem(storeKey, lang);
+    setActive(lang);
+  }
+
+  function init(){
+    const saved = localStorage.getItem(storeKey);
+    const fallback = ((navigator.language||'ja').toLowerCase().startsWith('en')) ? 'en' : 'ja';
+    const lang = (saved === 'en' || saved === 'ja') ? saved : fallback;
+    applyLang(lang);
+    document.getElementById('btnJA')?.addEventListener('click', () => applyLang('ja'));
+    document.getElementById('btnEN')?.addEventListener('click', () => applyLang('en'));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+<!-- === /i18n injection === -->
+
 </body>
 </html>
