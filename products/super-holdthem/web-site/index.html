@@ -161,10 +161,54 @@
 <script>
 (function(){
   const storeKey = "lang";
-  const I18N = {
-    en: { },
-    ja: { },
-  };
+  
+const I18N = {
+  en: {
+    ".brand-name": "SuperHold'em Calculator",
+    ".brand-sub": "Noas.inc",
+
+    /* Hero */
+    "h1": "Know your odds <span style=\"color:#86efac\">instantly</span>",
+    ".lead": "“SuperHold'em Calculator” helps you compute equity quickly with a simple UI—perfect for learning Super Hold'em.",
+
+    /* Section titles */
+    ".features-title, .features h2": "Features",
+    ".screens h2": "Screenshots",
+
+    /* Meta boxes (order-dependent, safe to ignore if not present) */
+    ".meta .box:nth-child(1)": "Price: Free",
+    ".meta .box:nth-child(2)": "Languages: Japanese, English",
+    ".meta .box:nth-child(3)": "Category: Games / Utilities",
+    ".meta .box:nth-child(4)": "Privacy: Core features processed locally",
+
+    /* Feature cards (order-dependent) */
+    ".grid .card:nth-child(1) h3": "Instant Equity",
+    ".grid .card:nth-child(1) p" : "Compute odds locally at high speed to support in-game decisions.",
+
+    ".grid .card:nth-child(2) h3": "Intuitive UI",
+    ".grid .card:nth-child(2) p" : "Clear input for hole cards and board editing—even beginners can start fast.",
+
+    ".grid .card:nth-child(3) h3": "Great for Learning",
+    ".grid .card:nth-child(3) p" : "A bridge to Super Hold'em—practice ranges and strategies.",
+
+    ".grid .card:nth-child(4) h3": "Privacy Friendly",
+    ".grid .card:nth-child(4) p" : "Core processing is done on-device. No match data sent.",
+
+    ".grid .card:nth-child(5) h3": "Universal",
+    ".grid .card:nth-child(5) p" : "Optimized for iPhone/iPad. Comfortable on large screens.",
+
+    ".grid .card:nth-child(6) h3": "Easy Sharing",
+    ".grid .card:nth-child(6) p" : "Designed to reproduce scenarios for reviews and discussions.",
+
+    /* Footer */
+    "footer .inner > div:first-child": "© 2025 SuperHold'em Calculator / Noas.inc",
+    "footer .inner > div:last-child": "This page is for informational purposes only."
+  },
+  ja: {
+    /* Optional ja overrides (usually unnecessary) */
+  },
+};
+
 
   function setActive(lang){
     const bJA = document.getElementById('btnJA');
@@ -218,6 +262,118 @@
 })();
 </script>
 <!-- === /i18n injection === -->
+
+
+<script>
+(function(){
+  const STORE = "lang";
+
+  // ---- 1) English dictionary (selector -> HTML) ----
+  // NOTE: Adjust selectors to your DOM if needed.
+  const EN_DICT = Object.assign({}, (window.I18N && window.I18N.en) || {
+    ".brand-name": "SuperHold'em Calculator",
+    ".brand-sub": "Noas.inc",
+    "h1": "Know your odds <span style=\"color:#86efac\">instantly</span>",
+    ".lead": "“SuperHold'em Calculator” helps you compute equity quickly with a simple UI—perfect for learning Super Hold'em.",
+    ".features-title, .features h2": "Features",
+    ".screens h2": "Screenshots",
+    ".meta .box:nth-child(1)": "Price: Free",
+    ".meta .box:nth-child(2)": "Languages: Japanese, English",
+    ".meta .box:nth-child(3)": "Category: Games / Utilities",
+    ".meta .box:nth-child(4)": "Privacy: Core features processed locally",
+    ".grid .card:nth-child(1) h3": "Instant Equity",
+    ".grid .card:nth-child(1) p" : "Compute odds locally at high speed to support in-game decisions.",
+    ".grid .card:nth-child(2) h3": "Intuitive UI",
+    ".grid .card:nth-child(2) p" : "Clear input for hole cards and board editing—even beginners can start fast.",
+    ".grid .card:nth-child(3) h3": "Great for Learning",
+    ".grid .card:nth-child(3) p" : "A bridge to Super Hold'em—practice ranges and strategies.",
+    ".grid .card:nth-child(4) h3": "Privacy Friendly",
+    ".grid .card:nth-child(4) p" : "Core processing is done on-device. No match data sent.",
+    ".grid .card:nth-child(5) h3": "Universal",
+    ".grid .card:nth-child(5) p" : "Optimized for iPhone/iPad. Comfortable on large screens.",
+    ".grid .card:nth-child(6) h3": "Easy Sharing",
+    ".grid .card:nth-child(6) p" : "Designed to reproduce scenarios for reviews and discussions.",
+    "footer .inner > div:first-child": "© 2025 SuperHold'em Calculator / Noas.inc",
+    "footer .inner > div:last-child": "This page is for informational purposes only."
+  });
+
+  // ---- 2) Build JA dict from the current DOM (first run) ----
+  function buildJaFromDom(keys){
+    const ja = {};
+    keys.forEach(sel => {
+      try {
+        const nodes = document.querySelectorAll(sel);
+        // If multiple nodes match, map each; but for simplicity we take the first node's innerHTML.
+        // For repeated selectors (cards), order-dependent selectors are used above.
+        if (nodes && nodes.length) {
+          ja[sel] = nodes[0].innerHTML;
+        }
+      }catch(e){ /* ignore invalid selectors */ }
+    });
+    return ja;
+  }
+
+  // ---- 3) Apply dictionary ----
+  function applyDict(dict){
+    Object.keys(dict).forEach(sel => {
+      try {
+        const html = dict[sel];
+        document.querySelectorAll(sel).forEach(n => { n.innerHTML = html; });
+      } catch(e){ /* ignore invalid selectors */ }
+    });
+  }
+
+  function setActive(lang){
+    const bJA = document.getElementById('btnJA');
+    const bEN = document.getElementById('btnEN');
+    if (bJA && bEN){
+      bJA.dataset.active = (lang === 'ja');
+      bEN.dataset.active = (lang === 'en');
+    }
+  }
+
+  // ---- 4) Init dictionaries on window (so you can inspect/extend later) ----
+  const SELECTOR_KEYS = Object.keys(EN_DICT);
+  const JA_DICT = (window.I18N && window.I18N.ja) || buildJaFromDom(SELECTOR_KEYS);
+  window.I18N = { en: EN_DICT, ja: JA_DICT };
+
+  // ---- 5) Decide default language ----
+  function defaultLang(){
+    // 1) If <html lang="..."> exists and startsWith('ja'|'en'), prefer it
+    const htmlLang = (document.documentElement.getAttribute('lang')||'').toLowerCase();
+    if (htmlLang.startsWith('ja')) return 'ja';
+    if (htmlLang.startsWith('en')) return 'en';
+    // 2) Navigator language
+    return ((navigator.language||'ja').toLowerCase().startsWith('en')) ? 'en' : 'ja';
+  }
+
+  function applyLang(lang){
+    if (lang === 'en') applyDict(window.I18N.en);
+    else applyDict(window.I18N.ja);
+    document.documentElement.setAttribute('lang', lang);
+    try { localStorage.setItem(STORE, lang); } catch(e){}
+    setActive(lang);
+  }
+
+  function init(){
+    // Pick language: localStorage > html lang > navigator
+    let lang = null;
+    try { lang = localStorage.getItem(STORE); } catch(e){}
+    if (lang !== 'ja' && lang !== 'en') lang = defaultLang();
+    // First application uses dictionaries only (no snapshot fallback).
+    applyLang(lang);
+    // Wire buttons
+    document.getElementById('btnJA')?.addEventListener('click', () => applyLang('ja'));
+    document.getElementById('btnEN')?.addEventListener('click', () => applyLang('en'));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 
 </body>
 </html>
