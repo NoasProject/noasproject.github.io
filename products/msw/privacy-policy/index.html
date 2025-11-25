@@ -1,54 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>プライバシーポリシー</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>プライバシーポリシー | マインスイーパー</title>
+  <meta name="description" content="マインスイーパー - 懐かしい人気のレトロゲームで脳を鍛えるアプリのプライバシーポリシー" />
   <style>
-    body { font-family: sans-serif; margin: 2em; line-height: 1.6; }
-    h1 { font-size: 1.8em; }
-    h2 { margin-top: 1.5em; font-size: 1.4em; }
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", Helvetica, Arial; }
+    
+    /* チカチカを抑えた、落ち着いたダークセピア・ブラウンの配色 */
+    body { 
+      background: linear-gradient(180deg, #2e2622, #1f1a17 50%, #0d0b0a); 
+      color: #d6d3d1; 
+    }
+    
+    /* アクセントカラー：彩度を落としたベージュゴールド */
+    a { color: #d4b483; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    
+    .container { max-width: 920px; margin: 0 auto; padding: 40px 20px 60px; }
+    
+    h1 { font-size: clamp(26px, 4vw, 40px); margin: 12px 0 20px; color: #eaddcf; text-align:center; }
+    
+    h2 { 
+      font-size: 22px; 
+      margin: 28px 0 10px; 
+      color: #eaddcf; 
+      border-left: 4px solid #a68a64; 
+      padding-left: 12px; 
+    }
+    
+    h3 { font-size: 18px; margin: 20px 0 8px; color: #eaddcf; }
+    
+    p, li { line-height: 1.8; color: #d6d3d1; }
+    ul { padding-left: 20px; }
+    
+    .card {
+      border: 1px solid rgba(212, 180, 131, 0.15);
+      background: rgba(30, 25, 22, 0.6);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    }
+    
+    footer {
+      border-top: 1px solid rgba(212, 180, 131, 0.15);
+      margin-top: 40px;
+      padding-top: 18px;
+      color: #8c8682;
+      font-size: 13px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <h1>プライバシーポリシー</h1>
+  <div class="container">
+    <h1>プライバシーポリシー</h1>
 
-  <p>本アプリは、ユーザーのプライバシーを尊重し、個人情報の保護に努めています。</p>
+    <section class="card">
+      <p>「マインスイーパー - 懐かしい人気のレトロゲームで脳を鍛える」（以下、本アプリ）は、ユーザーのプライバシーを尊重し、個人情報の保護に努めています。</p>
 
-  <h2>1. 収集する情報</h2>
-  <p>本アプリでは以下の情報を収集する場合があります：</p>
-  <ul>
-    <li>端末情報（OS、モデル、言語設定、IPアドレスなど）</li>
-    <li>広告識別子（IDFA、AAID）</li>
-    <li>クラッシュ情報やログ情報</li>
-    <li>アプリの利用状況（起動回数、画面遷移、滞在時間など）</li>
-  </ul>
+      <h2>1. 収集する情報</h2>
+      <p>本アプリでは以下の情報を収集する場合があります：</p>
+      <ul>
+        <li>端末情報（OS、モデル、言語設定、IPアドレスなど）</li>
+        <li>広告識別子（IDFA、AAID）</li>
+        <li>クラッシュ情報やログ情報</li>
+        <li>アプリの利用状況（起動回数、画面遷移、滞在時間など）</li>
+      </ul>
 
-  <h2>2. 使用するサービスと目的</h2>
-  <p>以下の外部サービスを使用しています：</p>
+      <h2>2. 使用するサービスと目的</h2>
+      <p>以下の外部サービスを使用しています：</p>
 
-  <h3>Firebase</h3>
-  <ul>
-    <li>ユーザー属性・アプリ利用状況の分析</li>
-    <li>クラッシュレポートの収集（Crashlytics）</li>
-    <li>匿名の統計データ収集</li>
-  </ul>
-  <p>Firebaseに関する詳細は <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase プライバシーとセキュリティ</a> をご確認ください。</p>
+      <h3>Firebase</h3>
+      <ul>
+        <li>ユーザー属性・アプリ利用状況の分析</li>
+        <li>クラッシュレポートの収集（Crashlytics）</li>
+        <li>匿名の統計データ収集</li>
+      </ul>
+      <p>Firebaseに関する詳細は <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase プライバシーとセキュリティ</a> をご確認ください。</p>
 
-  <h3>Google AdMob</h3>
-  <ul>
-    <li>パーソナライズ広告または非パーソナライズ広告の表示</li>
-    <li>広告表示回数、クリック数、収益などの収集</li>
-  </ul>
-  <p>Googleによるデータの使用については <a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener">Googleの広告に関するポリシー</a> をご確認ください。</p>
+      <h3>Google AdMob</h3>
+      <ul>
+        <li>パーソナライズ広告または非パーソナライズ広告の表示</li>
+        <li>広告表示回数、クリック数、収益などの収集</li>
+      </ul>
+      <p>Googleによるデータの使用については <a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener">Googleの広告に関するポリシー</a> をご確認ください。</p>
 
-  <h2>3. 第三者への提供</h2>
-  <p>上記サービス提供会社を除き、ユーザーの個人情報を第三者に提供・販売することはありません。</p>
+      <h2>3. 第三者への提供</h2>
+      <p>上記サービス提供会社を除き、ユーザーの個人情報を第三者に提供・販売することはありません。</p>
 
-  <h2>4. ユーザーの選択肢</h2>
-  <p>ユーザーは端末設定により、広告識別子のリセットや、パーソナライズ広告の無効化が可能です。また、アプリ内の設定やOSの設定からデータ収集を制限できる場合があります。</p>
+      <h2>4. ユーザーの選択肢</h2>
+      <p>ユーザーは端末設定により、広告識別子のリセットや、パーソナライズ広告の無効化が可能です。また、アプリ内の設定やOSの設定からデータ収集を制限できる場合があります。</p>
 
-  <h2>5. 変更について</h2>
-  <p>本プライバシーポリシーは、必要に応じて予告なく変更されることがあります。変更後は本ページにて反映されます。</p>
+      <h2>5. 変更について</h2>
+      <p>本プライバシーポリシーは、必要に応じて予告なく変更されることがあります。変更後は本ページにて反映されます。</p>
+    </section>
+
+    <footer>
+      <div>© 2025 マインスイーパー / Noas.inc</div>
+    </footer>
+  </div>
 </body>
 </html>
