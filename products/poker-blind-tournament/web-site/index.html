@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Poker Blind Tournament | 公式ランディング</title>
+  <meta name="description" content="Poker Blind Tournament は、ポーカートーナメントのブラインド進行を見やすく管理できるアプリ。藍色の落ち着いたUIで、レベル進行・休憩・通知を一画面で確認できます。" />
+  <meta property="og:title" content="Poker Blind Tournament" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ja_JP" />
+  <meta property="og:description" content="ポーカートーナメントのブラインド進行を、藍色の落ち着いたUIでスマートに管理。" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07101f;
+      --bg-deep: #040812;
+      --surface: rgba(14, 26, 48, 0.78);
+      --surface-strong: rgba(18, 32, 59, 0.96);
+      --line: rgba(167, 188, 255, 0.14);
+      --line-strong: rgba(167, 188, 255, 0.24);
+      --text: #edf2ff;
+      --muted: #a9b6d3;
+      --soft: #7f8db0;
+      --accent: #7c9cff;
+      --accent-strong: #9db3ff;
+      --accent-soft: rgba(124, 156, 255, 0.16);
+      --teal: #78d6d0;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(93, 109, 255, 0.24), transparent 30%),
+        radial-gradient(circle at 85% 18%, rgba(98, 200, 255, 0.14), transparent 24%),
+        linear-gradient(180deg, #0a1630 0%, var(--bg) 42%, var(--bg-deep) 100%);
+    }
+
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      opacity: 0.42;
+      z-index: 0;
+    }
+
+    .page::before {
+      top: 72px;
+      right: -120px;
+      background: rgba(92, 105, 255, 0.24);
+    }
+
+    .page::after {
+      left: -140px;
+      bottom: 8%;
+      background: rgba(55, 113, 255, 0.16);
+    }
+
+    .page > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      background:
+        linear-gradient(150deg, rgba(157, 179, 255, 0.92), rgba(72, 94, 194, 0.96)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), 0 18px 40px rgba(39, 58, 130, 0.35);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .brand small {
+      color: var(--soft);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav a:hover { color: var(--text); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.06fr) minmax(320px, 0.94fr);
+      gap: 34px;
+      align-items: center;
+      padding: 28px 0 56px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(124, 156, 255, 0.1);
+      border: 1px solid rgba(124, 156, 255, 0.2);
+      color: #c6d4ff;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 16px rgba(120, 214, 208, 0.8);
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(34px, 6vw, 62px);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    h1 .accent {
+      color: var(--accent-strong);
+      text-shadow: 0 0 24px rgba(124, 156, 255, 0.25);
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: clamp(15px, 2.4vw, 18px);
+      line-height: 1.85;
+    }
+
+    .cta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+
+    .button.primary {
+      color: #07101f;
+      background: linear-gradient(135deg, #d8e3ff, #9bb1ff);
+      box-shadow: 0 18px 34px rgba(95, 122, 226, 0.24);
+    }
+
+    .button.secondary {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line-strong);
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .hero-meta .stat,
+    .panel,
+    .card,
+    .timeline-item,
+    .info-card,
+    .screen-card {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-meta .stat {
+      padding: 16px;
+      border-radius: var(--radius-sm);
+    }
+
+    .hero-meta strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .hero-meta span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .panel {
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 120px;
+      background: linear-gradient(180deg, rgba(159, 178, 255, 0.12), rgba(159, 178, 255, 0));
+      pointer-events: none;
+    }
+
+    .phone-shell {
+      position: relative;
+      border-radius: 34px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(13, 21, 41, 0.98), rgba(7, 12, 24, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.48);
+    }
+
+    .phone-shell::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .screen {
+      border-radius: 24px;
+      overflow: hidden;
+      padding: 22px 18px 18px;
+      min-height: 548px;
+      background:
+        radial-gradient(circle at top right, rgba(157, 179, 255, 0.16), transparent 22%),
+        linear-gradient(180deg, #142342 0%, #0b1731 48%, #091020 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .screen-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #cfd9ff;
+      font-size: 12px;
+      margin-bottom: 18px;
+    }
+
+    .screen-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .screen-title strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .screen-title span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .chip {
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #dbe5ff;
+      background: rgba(124, 156, 255, 0.16);
+      border: 1px solid rgba(124, 156, 255, 0.24);
+    }
+
+    .screen-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .screen-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .screen-card.muted {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .row + .row {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .blind-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .blind-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .blind-item.active {
+      background: linear-gradient(135deg, rgba(124, 156, 255, 0.2), rgba(124, 156, 255, 0.08));
+      border-color: rgba(124, 156, 255, 0.28);
+    }
+
+    .blind-item strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .blind-item span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .blind-item .time {
+      font-weight: 700;
+      color: #dfe7ff;
+      font-size: 14px;
+    }
+
+    .floating-note {
+      position: absolute;
+      right: -18px;
+      bottom: 68px;
+      width: min(220px, 50%);
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(11, 23, 49, 0.92);
+      border: 1px solid rgba(157, 179, 255, 0.18);
+      box-shadow: 0 20px 50px rgba(2, 6, 18, 0.55);
+    }
+
+    .floating-note strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .floating-note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    section {
+      padding: 18px 0 20px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      border-radius: 22px;
+      padding: 20px;
+      min-height: 178px;
+    }
+
+    .card .icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, rgba(157, 179, 255, 0.28), rgba(80, 106, 209, 0.28));
+      border: 1px solid rgba(157, 179, 255, 0.18);
+    }
+
+    .card h3,
+    .timeline-item h3,
+    .info-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #ffffff;
+    }
+
+    .card p,
+    .timeline-item p,
+    .info-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .timeline-item {
+      border-radius: 22px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timeline-item::before {
+      content: attr(data-step);
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      font-size: 40px;
+      font-weight: 800;
+      color: rgba(157, 179, 255, 0.1);
+      letter-spacing: -0.05em;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .info-card {
+      padding: 18px;
+      border-radius: 20px;
+    }
+
+    .info-card span {
+      display: block;
+      color: var(--soft);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      margin-top: 34px;
+      padding: 24px 0 42px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--soft);
+      font-size: 13px;
+    }
+
+    footer a {
+      color: #c7d4ff;
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-copy,
+    .panel,
+    .card,
+    .timeline-item,
+    .info-card {
+      animation: floatIn 0.7s ease both;
+    }
+
+    .panel { animation-delay: 0.08s; }
+    .card:nth-child(2), .timeline-item:nth-child(2), .info-card:nth-child(2) { animation-delay: 0.08s; }
+    .card:nth-child(3), .timeline-item:nth-child(3), .info-card:nth-child(3) { animation-delay: 0.14s; }
+    .card:nth-child(4), .info-card:nth-child(4) { animation-delay: 0.2s; }
+    .card:nth-child(5) { animation-delay: 0.26s; }
+    .card:nth-child(6) { animation-delay: 0.32s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-copy,
+      .panel,
+      .card,
+      .timeline-item,
+      .info-card {
+        animation: none;
+      }
+
+      .button:hover {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        max-width: 620px;
+        margin: 0 auto;
+      }
+
+      .grid,
+      .timeline,
+      .info-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 24px, 1120px);
+      }
+
+      header {
+        align-items: start;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      nav {
+        gap: 14px;
+      }
+
+      .hero {
+        padding-top: 18px;
+      }
+
+      .hero-meta,
+      .grid,
+      .timeline,
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .screen {
+        min-height: 500px;
+      }
+
+      .floating-note {
+        position: static;
+        width: 100%;
+        margin-top: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="logo">BT</div>
+        <div>
+          <strong>Poker Blind Tournament</strong>
+          <small>Noas.inc</small>
+        </div>
+      </div>
+      <nav aria-label="ページ内リンク">
+        <a href="#features">機能</a>
+        <a href="#flow">使い方</a>
+        <a href="#info">アプリ情報</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-label="Hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Indigo Tournament Control</div>
+        <h1>ブラインド進行を、<br /><span class="accent">静かに、正確に。</span></h1>
+        <p class="lead">『Poker Blind Tournament』は、ポーカートーナメントのレベル進行を見やすく整理するための管理アプリです。ブラインド・アンティ・休憩タイミングを一画面で把握でき、テーブル進行を落ち着いてコントロールできます。</p>
+        <div class="cta">
+          <a class="button primary" href="#features">主な機能を見る</a>
+          <a class="button secondary" href="#flow">進行イメージを見る</a>
+        </div>
+        <div class="hero-meta" aria-label="概要">
+          <div class="stat">
+            <strong>12+</strong>
+            <span>レベル構成をまとめて確認しやすいタイムライン表示</span>
+          </div>
+          <div class="stat">
+            <strong>1画面</strong>
+            <span>現在レベル・次レベル・休憩までの流れを集約</span>
+          </div>
+          <div class="stat">
+            <strong>通知</strong>
+            <span>進行の節目をテンポよく知らせ、卓運営を補助</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" aria-label="アプリ画面モック">
+        <div class="phone-shell">
+          <div class="screen">
+            <div class="screen-top">
+              <span>9:41</span>
+              <span>Blind Manager</span>
+            </div>
+
+            <div class="screen-title">
+              <div>
+                <strong>Saturday Deep Stack</strong>
+                <span>Level 6 of 12</span>
+              </div>
+              <div class="chip">Running</div>
+            </div>
+
+            <div class="screen-grid">
+              <div class="screen-card">
+                <div class="row">
+                  <div>
+                    <div class="label">Current Blind</div>
+                    <div class="value">400 / 800</div>
+                  </div>
+                  <div>
+                    <div class="label">Ante</div>
+                    <div class="value">800</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div>
+                    <div class="label">Time Left</div>
+                    <div class="value">07:42</div>
+                  </div>
+                  <div>
+                    <div class="label">Next</div>
+                    <div class="value">500 / 1K</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="screen-card muted">
+                <div class="label">Level Schedule</div>
+                <div class="blind-list">
+                  <div class="blind-item">
+                    <div>
+                      <strong>Level 5</strong>
+                      <span>300 / 600 / 600</span>
+                    </div>
+                    <div class="time">Closed</div>
+                  </div>
+                  <div class="blind-item active">
+                    <div>
+                      <strong>Level 6</strong>
+                      <span>400 / 800 / 800</span>
+                    </div>
+                    <div class="time">Now</div>
+                  </div>
+                  <div class="blind-item">
+                    <div>
+                      <strong>Break</strong>
+                      <span>10 min</span>
+                    </div>
+                    <div class="time">+07:42</div>
+                  </div>
+                  <div class="blind-item">
+                    <div>
+                      <strong>Level 7</strong>
+                      <span>500 / 1K / 1K</span>
+                    </div>
+                    <div class="time">After</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="screen-card">
+                <div class="row">
+                  <div>
+                    <div class="label">Players Left</div>
+                    <div class="value">27</div>
+                  </div>
+                  <div>
+                    <div class="label">Average Stack</div>
+                    <div class="value">22 BB</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="floating-note">
+          <strong>テンポを崩さない進行</strong>
+          <p>現在のブラインドと次の変化点を同時に表示。場内アナウンスの前に、必要な情報を短時間で確認できます。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="section-head">
+        <h2>主な機能</h2>
+        <p>既存の Noas サイトと同じく、内容はシンプルに整理しつつ、トーナメント運営で本当に見る情報を前面に置いた構成にしています。</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="icon">01</div>
+          <h3>ブラインド進行を一覧化</h3>
+          <p>現在のレベルだけでなく、次のブラインドや休憩タイミングまでひと目で追えるように整理された画面設計です。</p>
+        </article>
+        <article class="card">
+          <div class="icon">02</div>
+          <h3>見落としにくい通知</h3>
+          <p>レベル切り替えや休憩前の節目をテンポよく通知。会場進行のリズムを崩さず案内できます。</p>
+        </article>
+        <article class="card">
+          <div class="icon">03</div>
+          <h3>柔軟なレベル設定</h3>
+          <p>レベル時間、アンティ、休憩挿入など、イベントのルールに合わせたカスタム構成を想定した情報整理です。</p>
+        </article>
+        <article class="card">
+          <div class="icon">04</div>
+          <h3>藍色ベースの落ち着いたUI</h3>
+          <p>長時間の運営でも視認しやすいよう、強すぎないコントラストと少し藍色寄りのトーンでまとめています。</p>
+        </article>
+        <article class="card">
+          <div class="icon">05</div>
+          <h3>モバイルで扱いやすい</h3>
+          <p>卓のそばで片手確認しやすい縦長レイアウトを前提に、情報ブロックをコンパクトに区切っています。</p>
+        </article>
+        <article class="card">
+          <div class="icon">06</div>
+          <h3>進行把握を高速化</h3>
+          <p>「今」「次」「その次」の3段階を迷わず見られるため、アナウンス前の確認時間を短縮できます。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="flow">
+      <div class="section-head">
+        <h2>使い方の流れ</h2>
+        <p>トーナメント開始前の準備から、進行中の確認、休憩やレベル切り替えまでを自然に追える構成です。</p>
+      </div>
+      <div class="timeline">
+        <article class="timeline-item" data-step="01">
+          <h3>レベルを登録</h3>
+          <p>ブラインド、アンティ、各レベルの長さ、休憩を順に設定し、その日の大会用タイムラインを作成します。</p>
+        </article>
+        <article class="timeline-item" data-step="02">
+          <h3>進行中は現在値を確認</h3>
+          <p>残り時間と次レベルを同時表示することで、プレイヤーへの声かけや場内表示の判断を早くします。</p>
+        </article>
+        <article class="timeline-item" data-step="03">
+          <h3>休憩や切り替えを通知</h3>
+          <p>節目ごとに進行を知らせ、卓のテンポを保ちながらスムーズにトーナメントを回せるようにします。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="info">
+      <div class="section-head">
+        <h2>アプリ情報</h2>
+        <p>他プロダクトと揃うカードレイアウトで、必要な基本情報を簡潔に配置しています。</p>
+      </div>
+      <div class="info-grid">
+        <article class="info-card">
+          <span>Category</span>
+          <h3>ゲーム / 運営補助</h3>
+          <p>ポーカートーナメントの進行管理向けユーティリティ。</p>
+        </article>
+        <article class="info-card">
+          <span>Language</span>
+          <h3>日本語 / 英語</h3>
+          <p>会場運営でも扱いやすい、シンプルな二言語想定の表示構成。</p>
+        </article>
+        <article class="info-card">
+          <span>Devices</span>
+          <h3>iPhone / iPad</h3>
+          <p>縦持ち中心のモバイル運用を意識した情報密度です。</p>
+        </article>
+        <article class="info-card">
+          <span>Copyright</span>
+          <h3>© 2026 Noas.inc</h3>
+          <p>製品サイト用の1ページ構成として整理しています。</p>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <div>© 2026 Poker Blind Tournament / Noas.inc</div>
+      <div><a href="../privacy-policy/">プライバシーポリシー</a></div>
+    </footer>
+  </div>
+</body>
+</html>
