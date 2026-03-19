@@ -334,6 +334,12 @@
       display: block;
       border-radius: 0;
       box-shadow: none;
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+
+    .hero-screenshot.is-fading {
+      opacity: 0.18;
     }
 
     .screen {
@@ -911,7 +917,7 @@
 
       <div class="panel screenshot-panel" aria-label="アプリスクリーンショット">
         <div class="phone-shell image-shell">
-          <img class="hero-screenshot" src="../resources/screenshot/screenshot_002.png" alt="Poker Blind Tournament の進行管理画面" />
+          <img class="hero-screenshot" id="heroScreenshot" src="../resources/screenshot/screenshot_002.png" alt="Poker Blind Tournament の進行管理画面" />
         </div>
       </div>
     </section>
@@ -1027,7 +1033,7 @@
       <div>© 2026 Poker Blind Tournament / Noas.inc</div>
       <div class="footer-actions">
         <button class="contact-trigger" id="contactTrigger" type="button" aria-haspopup="dialog" aria-controls="contactModal" aria-expanded="false">お問い合わせ</button>
-        <a href="../privacy-policy/">プライバシーポリシー</a>
+        <a href="https://noasproject.github.io/products/poker-blind-tournament/privacy-policy/">プライバシーポリシー</a>
       </div>
     </footer>
   </div>
@@ -1067,6 +1073,22 @@
       var email = document.getElementById("contactEmail");
       var subject = document.getElementById("contactSubject");
       var message = document.getElementById("contactMessage");
+      var heroScreenshot = document.getElementById("heroScreenshot");
+      var heroShots = [
+        {
+          src: "../resources/screenshot/screenshot_001.png",
+          alt: "Poker Blind Tournament の大会一覧画面"
+        },
+        {
+          src: "../resources/screenshot/screenshot_002.png",
+          alt: "Poker Blind Tournament の進行管理画面"
+        },
+        {
+          src: "../resources/screenshot/screenshot_003.png",
+          alt: "Poker Blind Tournament のブラインド編集画面"
+        }
+      ];
+      var heroIndex = 1;
 
       function setOpen(isOpen) {
         modal.hidden = !isOpen;
@@ -1120,6 +1142,19 @@
 
         window.location.href = href;
       });
+
+      if (heroScreenshot) {
+        window.setInterval(function () {
+          heroScreenshot.classList.add("is-fading");
+
+          window.setTimeout(function () {
+            heroIndex = (heroIndex + 1) % heroShots.length;
+            heroScreenshot.src = heroShots[heroIndex].src;
+            heroScreenshot.alt = heroShots[heroIndex].alt;
+            heroScreenshot.classList.remove("is-fading");
+          }, 220);
+        }, 3500);
+      }
     }());
   </script>
 </body>
