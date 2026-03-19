@@ -9,6 +9,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ja_JP" />
   <meta property="og:description" content="ポーカートーナメントのブラインド進行を、藍色の落ち着いたUIでスマートに管理。" />
+  <link rel="icon" type="image/png" href="../resources/app_icon/app_icon.png" />
   <style>
     :root {
       color-scheme: dark;
@@ -100,16 +101,16 @@
       width: 48px;
       height: 48px;
       border-radius: 16px;
-      display: grid;
-      place-items: center;
-      color: #ffffff;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      background:
-        linear-gradient(150deg, rgba(157, 179, 255, 0.92), rgba(72, 94, 194, 0.96)),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+      overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), 0 18px 40px rgba(39, 58, 130, 0.35);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 18px 40px rgba(39, 58, 130, 0.25);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .brand strong {
@@ -141,8 +142,8 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.06fr) minmax(320px, 0.94fr);
-      gap: 34px;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 320px);
+      gap: 28px;
       align-items: center;
       padding: 28px 0 56px;
     }
@@ -262,6 +263,9 @@
     }
 
     .panel {
+      width: 100%;
+      max-width: 320px;
+      justify-self: center;
       padding: 18px;
       border-radius: var(--radius-lg);
       position: relative;
@@ -275,6 +279,19 @@
       height: 120px;
       background: linear-gradient(180deg, rgba(159, 178, 255, 0.12), rgba(159, 178, 255, 0));
       pointer-events: none;
+    }
+
+    .panel.screenshot-panel {
+      padding: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .panel.screenshot-panel::before {
+      display: none;
     }
 
     .phone-shell {
@@ -296,6 +313,27 @@
       height: 7px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.08);
+    }
+
+    .phone-shell.image-shell {
+      padding: 0;
+      overflow: hidden;
+      background: transparent;
+      border: 0;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+      border-radius: 34px;
+    }
+
+    .phone-shell.image-shell::before {
+      display: none;
+    }
+
+    .hero-screenshot {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0;
+      box-shadow: none;
     }
 
     .screen {
@@ -427,31 +465,6 @@
       font-size: 14px;
     }
 
-    .floating-note {
-      position: absolute;
-      right: -18px;
-      bottom: 68px;
-      width: min(220px, 50%);
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(11, 23, 49, 0.92);
-      border: 1px solid rgba(157, 179, 255, 0.18);
-      box-shadow: 0 20px 50px rgba(2, 6, 18, 0.55);
-    }
-
-    .floating-note strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 14px;
-    }
-
-    .floating-note p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
     section {
       padding: 18px 0 20px;
     }
@@ -525,6 +538,29 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
+    }
+
+    .shots-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .shot-card {
+      padding: 14px;
+      border-radius: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .shot-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
     }
 
     .timeline-item {
@@ -631,12 +667,13 @@
       }
 
       .panel {
-        max-width: 620px;
+        max-width: 320px;
         margin: 0 auto;
       }
 
       .grid,
       .timeline,
+      .shots-grid,
       .info-grid {
         grid-template-columns: 1fr 1fr;
       }
@@ -669,6 +706,7 @@
       .hero-meta,
       .grid,
       .timeline,
+      .shots-grid,
       .info-grid {
         grid-template-columns: 1fr;
       }
@@ -677,11 +715,6 @@
         min-height: 500px;
       }
 
-      .floating-note {
-        position: static;
-        width: 100%;
-        margin-top: 14px;
-      }
     }
   </style>
 </head>
@@ -689,7 +722,7 @@
   <div class="page">
     <header>
       <div class="brand">
-        <div class="logo">BT</div>
+        <div class="logo"><img src="../resources/app_icon/app_icon.png" alt="Poker Blind Tournament icon" /></div>
         <div>
           <strong>Poker Blind Tournament</strong>
           <small>Noas.inc</small>
@@ -697,6 +730,7 @@
       </div>
       <nav aria-label="ページ内リンク">
         <a href="#features">機能</a>
+        <a href="#screenshots">画面</a>
         <a href="#flow">使い方</a>
         <a href="#info">アプリ情報</a>
       </nav>
@@ -727,100 +761,28 @@
         </div>
       </div>
 
-      <div class="panel" aria-label="アプリ画面モック">
-        <div class="phone-shell">
-          <div class="screen">
-            <div class="screen-top">
-              <span>9:41</span>
-              <span>Blind Manager</span>
-            </div>
-
-            <div class="screen-title">
-              <div>
-                <strong>Saturday Deep Stack</strong>
-                <span>Level 6 of 12</span>
-              </div>
-              <div class="chip">Running</div>
-            </div>
-
-            <div class="screen-grid">
-              <div class="screen-card">
-                <div class="row">
-                  <div>
-                    <div class="label">Current Blind</div>
-                    <div class="value">400 / 800</div>
-                  </div>
-                  <div>
-                    <div class="label">Ante</div>
-                    <div class="value">800</div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div>
-                    <div class="label">Time Left</div>
-                    <div class="value">07:42</div>
-                  </div>
-                  <div>
-                    <div class="label">Next</div>
-                    <div class="value">500 / 1K</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="screen-card muted">
-                <div class="label">Level Schedule</div>
-                <div class="blind-list">
-                  <div class="blind-item">
-                    <div>
-                      <strong>Level 5</strong>
-                      <span>300 / 600 / 600</span>
-                    </div>
-                    <div class="time">Closed</div>
-                  </div>
-                  <div class="blind-item active">
-                    <div>
-                      <strong>Level 6</strong>
-                      <span>400 / 800 / 800</span>
-                    </div>
-                    <div class="time">Now</div>
-                  </div>
-                  <div class="blind-item">
-                    <div>
-                      <strong>Break</strong>
-                      <span>10 min</span>
-                    </div>
-                    <div class="time">+07:42</div>
-                  </div>
-                  <div class="blind-item">
-                    <div>
-                      <strong>Level 7</strong>
-                      <span>500 / 1K / 1K</span>
-                    </div>
-                    <div class="time">After</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="screen-card">
-                <div class="row">
-                  <div>
-                    <div class="label">Players Left</div>
-                    <div class="value">27</div>
-                  </div>
-                  <div>
-                    <div class="label">Average Stack</div>
-                    <div class="value">22 BB</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="panel screenshot-panel" aria-label="アプリスクリーンショット">
+        <div class="phone-shell image-shell">
+          <img class="hero-screenshot" src="../resources/screenshot/screenshot_002.png" alt="Poker Blind Tournament の進行管理画面" />
         </div>
+      </div>
+    </section>
 
-        <div class="floating-note">
-          <strong>テンポを崩さない進行</strong>
-          <p>現在のブラインドと次の変化点を同時に表示。場内アナウンスの前に、必要な情報を短時間で確認できます。</p>
-        </div>
+    <section id="screenshots">
+      <div class="section-head">
+        <h2>スクリーンショット</h2>
+        <p>大会作成、進行管理、ブラインド編集まで、主要画面をそのまま確認できるように実アプリ画像を掲載しています。</p>
+      </div>
+      <div class="shots-grid">
+        <article class="shot-card">
+          <img src="../resources/screenshot/screenshot_001.png" alt="Poker Blind Tournament の大会一覧画面" />
+        </article>
+        <article class="shot-card">
+          <img src="../resources/screenshot/screenshot_002.png" alt="Poker Blind Tournament の進行管理画面" />
+        </article>
+        <article class="shot-card">
+          <img src="../resources/screenshot/screenshot_003.png" alt="Poker Blind Tournament のブラインド編集画面" />
+        </article>
       </div>
     </section>
 
