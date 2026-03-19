@@ -621,6 +621,150 @@
 
     footer a:hover { text-decoration: underline; }
 
+    .footer-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .contact-trigger {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #c7d4ff;
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .contact-trigger:hover {
+      text-decoration: underline;
+    }
+
+    .contact-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 38;
+      background: rgba(2, 6, 18, 0.52);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .contact-backdrop[hidden] {
+      display: none;
+    }
+
+    .contact-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 40;
+      width: min(460px, calc(100vw - 24px));
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(12, 22, 44, 0.96);
+      border: 1px solid rgba(124, 156, 255, 0.22);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .contact-modal[hidden] {
+      display: none;
+    }
+
+    .contact-modal h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .contact-modal p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .form-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .form-field label {
+      color: var(--soft);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      font-size: 14px;
+      font: inherit;
+      outline: none;
+    }
+
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: #92a0c1;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: rgba(124, 156, 255, 0.42);
+      box-shadow: 0 0 0 3px rgba(124, 156, 255, 0.12);
+    }
+
+    .form-field textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .modal-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .modal-button.primary {
+      color: #07101f;
+      background: linear-gradient(135deg, #d8e3ff, #9bb1ff);
+    }
+
+    .modal-button.secondary {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
     @keyframes floatIn {
       from {
         opacity: 0;
@@ -713,6 +857,10 @@
 
       .screen {
         min-height: 500px;
+      }
+
+      .contact-modal {
+        width: min(460px, calc(100vw - 24px));
       }
 
     }
@@ -877,8 +1025,102 @@
 
     <footer>
       <div>© 2026 Poker Blind Tournament / Noas.inc</div>
-      <div><a href="../privacy-policy/">プライバシーポリシー</a></div>
+      <div class="footer-actions">
+        <button class="contact-trigger" id="contactTrigger" type="button" aria-haspopup="dialog" aria-controls="contactModal" aria-expanded="false">お問い合わせ</button>
+        <a href="../privacy-policy/">プライバシーポリシー</a>
+      </div>
     </footer>
   </div>
+
+  <div class="contact-backdrop" id="contactBackdrop" hidden></div>
+
+  <div class="contact-modal" id="contactModal" role="dialog" aria-modal="false" aria-labelledby="contactModalTitle" hidden>
+    <h2 id="contactModalTitle">お問い合わせ</h2>
+    <p>入力内容をもとに、サポート用メールを作成します。ご質問、不具合報告、改善要望などをお送りください。</p>
+    <form class="contact-form" id="contactForm">
+      <div class="form-field">
+        <label for="contactEmail">メールアドレス</label>
+        <input id="contactEmail" name="email" type="email" placeholder="your-email@example.com" required />
+      </div>
+      <div class="form-field">
+        <label for="contactSubject">件名</label>
+        <input id="contactSubject" name="subject" type="text" placeholder="お問い合わせ件名" required />
+      </div>
+      <div class="form-field">
+        <label for="contactMessage">内容</label>
+        <textarea id="contactMessage" name="message" placeholder="お問い合わせ内容をご記入ください" required></textarea>
+      </div>
+    </form>
+    <div class="modal-actions">
+      <button class="modal-button primary" id="contactSubmit" type="submit" form="contactForm">メールを送る</button>
+      <button class="modal-button secondary" id="contactModalClose" type="button">閉じる</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var trigger = document.getElementById("contactTrigger");
+      var backdrop = document.getElementById("contactBackdrop");
+      var modal = document.getElementById("contactModal");
+      var close = document.getElementById("contactModalClose");
+      var form = document.getElementById("contactForm");
+      var email = document.getElementById("contactEmail");
+      var subject = document.getElementById("contactSubject");
+      var message = document.getElementById("contactMessage");
+
+      function setOpen(isOpen) {
+        modal.hidden = !isOpen;
+        backdrop.hidden = !isOpen;
+        trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        if (isOpen) {
+          window.setTimeout(function () {
+            email.focus();
+          }, 0);
+        }
+      }
+
+      trigger.addEventListener("click", function () {
+        setOpen(modal.hidden);
+      });
+
+      close.addEventListener("click", function () {
+        setOpen(false);
+      });
+
+      backdrop.addEventListener("click", function () {
+        setOpen(false);
+      });
+
+      document.addEventListener("click", function (event) {
+        if (modal.hidden) return;
+        if (modal.contains(event.target) || trigger.contains(event.target)) return;
+        setOpen(false);
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          setOpen(false);
+        }
+      });
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+
+        var body = [
+          "送信者メールアドレス: " + email.value,
+          "",
+          message.value
+        ].join("\n");
+
+        var href = "mailto:support@noasproject.com?subject=" +
+          encodeURIComponent(subject.value) +
+          "&body=" +
+          encodeURIComponent(body);
+
+        window.location.href = href;
+      });
+    }());
+  </script>
 </body>
 </html>
