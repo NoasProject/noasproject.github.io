@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Hold'em スターティングハンド強さテーブル</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #f7fafc;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      font-size: 0.75rem;
+      color: #718096;
+      margin-bottom: 4px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin: 18px 0 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      min-width: 180px;
+      padding: 8px 12px;
+      background: #1a202c;
+      border: 1px solid #2d3748;
+      border-radius: 6px;
+      color: #e2e8f0;
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #4299e1;
+    }
+
+    input[type="text"]::placeholder {
+      color: #4a5568;
+    }
+
+    .filter-btn {
+      padding: 8px 14px;
+      background: #1a202c;
+      border: 1px solid #2d3748;
+      border-radius: 6px;
+      color: #a0aec0;
+      font-size: 0.78rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: #2d3748;
+      border-color: #4299e1;
+      color: #e2e8f0;
+    }
+
+    .count {
+      font-size: 0.75rem;
+      color: #4a5568;
+      margin-left: auto;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid #2d3748;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    thead th {
+      background: #1a202c;
+      padding: 10px 12px;
+      text-align: right;
+      color: #718096;
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #2d3748;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    thead th:nth-child(2) { text-align: center; }
+    thead th:hover { color: #e2e8f0; }
+    thead th.sort-asc::after  { content: ' ↑'; }
+    thead th.sort-desc::after { content: ' ↓'; }
+
+    tbody tr {
+      border-bottom: 1px solid #1a202c;
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover { background: #1e2633; }
+
+    td {
+      padding: 7px 12px;
+      text-align: right;
+      color: #cbd5e0;
+    }
+
+    td:nth-child(2) {
+      text-align: center;
+      font-weight: 700;
+      color: #f7fafc;
+      letter-spacing: 0.08em;
+    }
+
+    td:nth-child(1) { color: #4a5568; }
+
+    .wr-cell {
+      font-weight: 600;
+    }
+
+    .tier-s  { color: #fc8181; }
+    .tier-a  { color: #f6ad55; }
+    .tier-b  { color: #f6e05e; }
+    .tier-c  { color: #68d391; }
+    .tier-d  { color: #63b3ed; }
+    .tier-e  { color: #9f7aea; }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #4a5568;
+      font-size: 0.9rem;
+    }
+
+    .error {
+      text-align: center;
+      padding: 40px 20px;
+      color: #fc8181;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Super Hold'em スターティングハンド強さテーブル</h1>
+    <p class="subtitle">vsランダム相手 モンテカルロ勝率順（10M 試行/ハンド種別）　value = 累積コンボ / 22,100（全コンボ C(52,3) = 22,100）</p>
+
+    <div class="controls">
+      <input type="text" id="search" placeholder="ハンドを検索（例: AA, KK, AKQ）">
+      <button class="filter-btn active" data-min="0"   data-max="100">全て</button>
+      <button class="filter-btn" data-min="80" data-max="100">WR 80%+</button>
+      <button class="filter-btn" data-min="70" data-max="100">WR 70%+</button>
+      <button class="filter-btn" data-min="60" data-max="100">WR 60%+</button>
+      <button class="filter-btn" data-min="0"  data-max="50">WR 50%未満</button>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="table-wrap">
+      <div class="loading" id="loading">データを読み込み中...</div>
+      <table id="main-table" style="display:none">
+        <thead>
+          <tr>
+            <th data-col="0">Rank</th>
+            <th data-col="1">Hand</th>
+            <th data-col="2">Combos</th>
+            <th data-col="3">Cum.Combos</th>
+            <th data-col="4">Cum.%</th>
+            <th data-col="5">value</th>
+            <th data-col="6">WinRate%</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let allRows = [];
+    let sortCol = 0;
+    let sortAsc = true;
+    let filterMin = 0;
+    let filterMax = 100;
+    let searchText = '';
+
+    function tierClass(wr) {
+      if (wr >= 85) return 'tier-s';
+      if (wr >= 75) return 'tier-a';
+      if (wr >= 65) return 'tier-b';
+      if (wr >= 55) return 'tier-c';
+      if (wr >= 45) return 'tier-d';
+      return 'tier-e';
+    }
+
+    function render() {
+      const query = searchText.toUpperCase();
+      const filtered = allRows.filter(r => {
+        const wr = r[6];
+        if (wr < filterMin || wr > filterMax) return false;
+        if (query && !r[1].toUpperCase().includes(query)) return false;
+        return true;
+      });
+
+      const sorted = [...filtered].sort((a, b) => {
+        const av = a[sortCol], bv = b[sortCol];
+        if (typeof av === 'number') return sortAsc ? av - bv : bv - av;
+        return sortAsc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+      });
+
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = sorted.map(r => {
+        const wr = r[6];
+        const tc = tierClass(wr);
+        return `<tr>
+          <td>${r[0]}</td>
+          <td>${r[1]}</td>
+          <td>${r[2]}</td>
+          <td>${r[3].toLocaleString()}</td>
+          <td>${r[4].toFixed(4)}</td>
+          <td>${r[5].toFixed(6)}</td>
+          <td class="wr-cell ${tc}">${wr.toFixed(4)}</td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('count').textContent = `${sorted.length.toLocaleString()} / ${allRows.length.toLocaleString()} 件`;
+    }
+
+    function parseMd(text) {
+      const rows = [];
+      const lines = text.split('\n');
+      for (const line of lines) {
+        if (!line.startsWith('|')) continue;
+        const cells = line.split('|').slice(1, -1).map(c => c.trim());
+        if (cells.length < 7) continue;
+        if (cells[0] === 'Rank' || cells[0].startsWith('-')) continue;
+        const rank   = parseInt(cells[0]);
+        const hand   = cells[1];
+        const combos = parseInt(cells[2]);
+        const cumC   = parseInt(cells[3]);
+        const cumPct = parseFloat(cells[4]);
+        const value  = parseFloat(cells[5]);
+        const wr     = parseFloat(cells[6]);
+        if (isNaN(rank)) continue;
+        rows.push([rank, hand, combos, cumC, cumPct, value, wr]);
+      }
+      return rows;
+    }
+
+    fetch('SuperHoldthemHandRanking.md')
+      .then(r => {
+        if (!r.ok) throw new Error('fetch failed');
+        return r.text();
+      })
+      .then(text => {
+        allRows = parseMd(text);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('main-table').style.display = 'table';
+        render();
+      })
+      .catch(e => {
+        document.getElementById('loading').className = 'error';
+        document.getElementById('loading').textContent = 'データの読み込みに失敗しました: ' + e.message;
+      });
+
+    document.getElementById('search').addEventListener('input', e => {
+      searchText = e.target.value;
+      render();
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterMin = parseFloat(btn.dataset.min);
+        filterMax = parseFloat(btn.dataset.max);
+        render();
+      });
+    });
+
+    document.querySelectorAll('thead th').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = parseInt(th.dataset.col);
+        if (sortCol === col) {
+          sortAsc = !sortAsc;
+        } else {
+          sortCol = col;
+          sortAsc = col === 0;
+        }
+        document.querySelectorAll('thead th').forEach(t => t.classList.remove('sort-asc', 'sort-desc'));
+        th.classList.add(sortAsc ? 'sort-asc' : 'sort-desc');
+        render();
+      });
+    });
+
+    // 初期ソートインジケーター
+    document.querySelector('thead th[data-col="0"]').classList.add('sort-asc');
+  </script>
+</body>
+</html>
