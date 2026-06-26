@@ -1,0 +1,24 @@
+{
+  "ios": {
+    "allowed_versions": ["^0\\.0\\.[5-9]$", "^0\\.[1-9][0-9]*\\.", "^[1-9][0-9]*\\."],
+    "force_update": false,
+    "can_purchase": true,
+    "purchase_product_id": "poker_headsup_premium",
+    "store_url": "https://apps.apple.com/app/idXXXXXXXX",
+    "message": {
+      "ja": "このバージョンはサポートが終了しました。\nApp Store から最新版にアップデートしてください。",
+      "en": "This version is no longer supported.\nPlease update to the latest version from the App Store."
+    }
+  },
+  "android": {
+    "allowed_versions": ["^0\\.0\\.[5-9]$", "^0\\.[1-9][0-9]*\\.", "^[1-9][0-9]*\\."],
+    "force_update": false,
+    "can_purchase": true,
+    "purchase_product_id": "poker_headsup_premium",
+    "store_url": "https://play.google.com/store/apps/details?id=com.noasproject.pokerHeadsupChipCounter",
+    "message": {
+      "ja": "このバージョンはサポートが終了しました。\nApp Store から最新版にアップデートしてください。",
+      "en": "This version is no longer supported.\nPlease update to the latest version from Google Play."
+    }
+  }
+}
