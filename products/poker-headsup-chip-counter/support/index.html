@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>サポート | HeadsUp</title>
+  <meta name="description" content="HeadsUp（ヘッズアップポーカー用チップカウンター）のサポートページ" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07101f;
+      --bg-deep: #040812;
+      --surface: rgba(14, 26, 48, 0.82);
+      --line: rgba(167, 188, 255, 0.16);
+      --text: #edf2ff;
+      --muted: #a9b6d3;
+      --soft: #7f8db0;
+      --accent: #9db3ff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(93, 109, 255, 0.22), transparent 30%),
+        linear-gradient(180deg, #0a1630 0%, var(--bg) 44%, var(--bg-deep) 100%);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(920px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0 60px;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: clamp(28px, 4.6vw, 42px);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      color: #fff;
+    }
+
+    .lead {
+      margin: 0 0 22px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .card {
+      padding: 28px 24px;
+      border-radius: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin: 28px 0 10px;
+      font-size: 22px;
+      color: #fff;
+    }
+
+    h2:first-of-type { margin-top: 0; }
+
+    p, li {
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 15px;
+    }
+
+    ul {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .contact-button {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #0a1020;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .contact-button:hover {
+      text-decoration: none;
+      opacity: 0.9;
+    }
+
+    footer {
+      margin-top: 26px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--soft);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .container { width: min(100% - 24px, 920px); }
+      .card { padding: 22px 18px; border-radius: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>HeadsUp サポート</h1>
+    <p class="lead">HeadsUp（ヘッズアップポーカー用チップカウンター）に関するご質問・不具合報告・ご要望を受け付けています。</p>
+
+    <section class="card">
+      <h2>お問い合わせ</h2>
+      <p>下記メールアドレスまでご連絡ください。内容を確認のうえ、順次対応いたします。</p>
+      <a class="contact-button" href="mailto:lowntry@gmail.com?subject=HeadsUpに関するお問い合わせ">lowntry@gmail.com へメールを送る</a>
+    </section>
+
+    <section class="card">
+      <h2>よくあるご質問</h2>
+      <ul>
+        <li><strong>App内課金を復元したい</strong> — 設定画面から購入の復元操作を行ってください。それでも反映されない場合は上記メールアドレスまでご連絡ください。</li>
+        <li><strong>セッションのデータが消えてしまった</strong> — 本アプリのデータは端末内にのみ保存されます。アプリの再インストールや端末変更を行うとデータは引き継がれません。</li>
+      </ul>
+    </section>
+
+    <footer>
+      <a href="https://noasproject.github.io/products/poker-headsup-chip-counter/privacy-policy/">プライバシーポリシー</a>
+      ｜ © 2026 HeadsUp / NoasProject
+    </footer>
+  </div>
+</body>
+</html>
