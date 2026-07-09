@@ -1,6 +1,6 @@
 {
   "ios": {
-    "allowed_versions": ["^1\\.1\\.0$"],
+    "allowed_versions": ["^1\\.1\\.0$", "^2\\.0\\.0$"],
     "force_update": true,
     "store_url": "https://apps.apple.com/app/idXXXXXXXX",
     "message": {
@@ -9,7 +9,7 @@
     }
   },
   "android": {
-    "allowed_versions": ["^1\\.0\\.[0-9]+$"],
+    "allowed_versions": ["^1\\.0\\.[0-9]+$", "^2\\.0\\.0$"],
     "force_update": false,
     "store_url": "https://play.google.com/store/apps/details?id=noas.poker.tournament.blind.floor",
     "message": {
