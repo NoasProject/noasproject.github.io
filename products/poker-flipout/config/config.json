@@ -1,0 +1,26 @@
+{
+  "ios": {
+    "allowed_versions": ["^1\\.0\\.0$"],
+    "force_update": false,
+    "can_purchase": false,
+    "purchase_product_ids": [],
+    "purchase_product_id": "",
+    "store_url": "",
+    "message": {
+      "ja": "最新版のPokerFlipoutを利用してください。",
+      "en": "Please update PokerFlipout to the latest version."
+    }
+  },
+  "android": {
+    "allowed_versions": ["^1\\.0\\.0$"],
+    "force_update": false,
+    "can_purchase": false,
+    "purchase_product_ids": [],
+    "purchase_product_id": "",
+    "store_url": "",
+    "message": {
+      "ja": "最新版のPokerFlipoutを利用してください。",
+      "en": "Please update PokerFlipout to the latest version."
+    }
+  }
+}
