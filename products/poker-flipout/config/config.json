@@ -1,10 +1,14 @@
 {
-  "config_version": "1.0.0f1",
+  "config_version": "1.0.0f2",
   "ios": {
     "allowed_versions": ["^1\\.0\\.0$"],
     "force_update": false,
     "can_purchase": false,
-    "purchase_product_ids": [],
+    "purchase_product_ids": [
+      "pokerflipout_super_holdem_pack",
+      "pokerflipout_stud_pack",
+      "pokerflipout_other_pack_vol_1"
+    ],
     "purchase_product_id": "",
     "store_url": "",
     "message": {
@@ -16,7 +20,11 @@
     "allowed_versions": ["^1\\.0\\.0$"],
     "force_update": false,
     "can_purchase": false,
-    "purchase_product_ids": [],
+    "purchase_product_ids": [
+      "pokerflipout_super_holdem_pack",
+      "pokerflipout_stud_pack",
+      "pokerflipout_other_pack_vol_1"
+    ],
     "purchase_product_id": "",
     "store_url": "",
     "message": {
