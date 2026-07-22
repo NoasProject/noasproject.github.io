@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PokerFlipout | ホールカードからリバーまで、テーブル全員でFLIPOUT</title>
+  <meta name="description" content="2〜10人でホールカードとコミュニティボードを順番に公開し、各プレイヤーのエクイティを確認できるポーカーFlipoutシミュレーター『PokerFlipout』の公式サイト。" />
+  <meta property="og:title" content="PokerFlipout" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ja_JP" />
+  <meta property="og:description" content="ホールカードからリバーまで、テーブルの展開をFLIPOUT。NLH、PLO、スタッド系の多彩なポーカーをテンポよく楽しめます。" />
+  <link rel="icon" href="./assets/app-icon.png" />
+  <style>
+    :root {
+      color-scheme: light;
+      --color-primary: #059669;
+      --color-secondary: #10b981;
+      --color-cta: #f97316;
+      --color-background: #ecfdf5;
+      --color-text: #064e3b;
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      --space-3xl: 64px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(180deg, var(--color-background), #ffffff 55%);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    header { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); background: rgba(255,255,255,0.82); border-bottom: 1px solid rgba(6,78,59,0.08); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 40px; height: 40px; border-radius: 10px; box-shadow: var(--shadow-sm); }
+    .brand-name { font-weight: 700; font-size: 18px; color: var(--color-text); }
+
+    .lang-toggle { display: flex; border: 1px solid var(--color-primary); border-radius: 999px; overflow: hidden; }
+    .lang-toggle button {
+      border: none; background: transparent; color: var(--color-primary);
+      padding: 6px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background 200ms ease, color 200ms ease;
+    }
+    .lang-toggle button.active { background: var(--color-primary); color: #fff; }
+
+    .hero { padding: var(--space-3xl) 0 var(--space-2xl); display: grid; grid-template-columns: 1.1fr 0.9fr; gap: var(--space-2xl); align-items: center; }
+    @media (max-width: 860px) { .hero { grid-template-columns: 1fr; padding-top: var(--space-2xl); } }
+    .eyebrow { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; color: var(--color-primary); background: rgba(5,150,105,0.1); padding: 6px 14px; border-radius: 999px; margin-bottom: var(--space-md); }
+    h1 { font-size: clamp(30px, 4.2vw, 46px); margin: 0 0 var(--space-md); color: var(--color-text); line-height: 1.25; font-weight: 800; }
+    .lead { font-size: clamp(15px, 2vw, 18px); color: #0f5132; margin: 0 0 var(--space-xl); max-width: 52ch; }
+
+    .cta-row { display: flex; gap: var(--space-md); flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 200ms ease; font-size: 15px; }
+    .btn-primary { background: var(--color-cta); color: #fff; box-shadow: var(--shadow-md); }
+    .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); text-decoration: none; }
+    .btn-secondary { background: transparent; color: var(--color-primary); border: 2px solid var(--color-primary); }
+    .btn-secondary:hover { background: rgba(5,150,105,0.08); text-decoration: none; }
+
+    .hero-visual { display: flex; justify-content: center; }
+    .icon-frame {
+      width: 240px; height: 240px; border-radius: 54px; overflow: hidden;
+      box-shadow: var(--shadow-xl); border: 1px solid rgba(6,78,59,0.08);
+      background: #fff;
+    }
+    .icon-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    section { padding: var(--space-2xl) 0; }
+    .section-title { font-size: clamp(22px, 3vw, 30px); font-weight: 800; margin: 0 0 var(--space-xs); color: var(--color-text); }
+    .section-sub { color: #0f5132; margin: 0 0 var(--space-xl); max-width: 60ch; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-lg); }
+    @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #fff; border-radius: 12px; padding: var(--space-lg);
+      box-shadow: var(--shadow-md); transition: all 200ms ease; border: 1px solid rgba(6,78,59,0.06);
+    }
+    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .card .icon-badge {
+      width: 44px; height: 44px; border-radius: 10px; background: rgba(5,150,105,0.12);
+      display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-md);
+      color: var(--color-primary);
+    }
+    .card h3 { margin: 0 0 8px; font-size: 17px; color: var(--color-text); }
+    .card p { margin: 0; font-size: 14px; color: #0f5132; }
+
+    .games-section { background: rgba(5,150,105,0.06); border-radius: 24px; }
+    .games-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--space-md); }
+    @media (max-width: 700px) { .games-grid { grid-template-columns: 1fr; } }
+    .game-row {
+      display: flex; align-items: center; justify-content: space-between; gap: var(--space-md);
+      background: #fff; border-radius: 12px; padding: 16px 20px; box-shadow: var(--shadow-sm);
+    }
+    .game-row .game-name { font-weight: 700; color: var(--color-text); }
+    .game-row .game-tag { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+    .tag-free { background: rgba(5,150,105,0.15); color: var(--color-primary); }
+    .tag-pack { background: rgba(249,115,22,0.14); color: #c2410c; }
+
+    .langs-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .lang-chip { background: #fff; border: 1px solid rgba(6,78,59,0.12); border-radius: 999px; padding: 6px 16px; font-size: 13px; color: var(--color-text); box-shadow: var(--shadow-sm); }
+
+    footer { border-top: 1px solid rgba(6,78,59,0.1); margin-top: var(--space-2xl); padding: var(--space-xl) 0 var(--space-2xl); }
+    .footer-inner { display: flex; flex-direction: column; align-items: center; gap: var(--space-sm); text-align: center; color: #0f5132; font-size: 13px; }
+    .footer-links { display: flex; gap: var(--space-lg); flex-wrap: wrap; justify-content: center; }
+
+    [data-en] { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <div class="brand">
+        <img src="./assets/app-icon.png" alt="PokerFlipout app icon" />
+        <span class="brand-name">PokerFlipout</span>
+      </div>
+      <div class="lang-toggle" role="group" aria-label="Language switch">
+        <button type="button" data-set-lang="ja" class="active">JA</button>
+        <button type="button" data-set-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <span class="eyebrow" data-ja>ポーカー・フリップアウト・シミュレーター</span>
+        <span class="eyebrow" data-en>Poker flipout simulator</span>
+        <h1 data-ja>ホールカードからリバーまで、テーブル全員でFLIPOUT</h1>
+        <h1 data-en>Flip from hole cards to the river, together</h1>
+        <p class="lead" data-ja>2〜10人でホールカードとコミュニティボードを順番に公開し、各プレイヤーのエクイティを確認できるポーカーシミュレーター。NLHとPLOは無料、追加ゲームは買い切りパックで解放できます。</p>
+        <p class="lead" data-en>Reveal hole cards and the community board street by street for 2–10 players, and track each player's changing equity. NLH and PLO are free — unlock more games with one-time packs.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://github.com/NoasProject/FlipoutPoker" target="_blank" rel="noopener">
+            <span data-ja>App Store（近日公開）</span>
+            <span data-en>App Store (Coming soon)</span>
+          </a>
+          <a class="btn btn-secondary" href="https://github.com/NoasProject/FlipoutPoker" target="_blank" rel="noopener">
+            <span data-ja>Google Play（近日公開）</span>
+            <span data-en>Google Play (Coming soon)</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="icon-frame">
+          <img src="./assets/app-icon.png" alt="PokerFlipout" />
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <h2 class="section-title" data-ja>主な機能</h2>
+      <h2 class="section-title" data-en>Features</h2>
+      <p class="section-sub" data-ja>テーブル全員で一番おいしい瞬間を楽しむための機能を揃えました。</p>
+      <p class="section-sub" data-en>Everything you need to enjoy the best moments of poker with your whole table.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="icon-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 data-ja>2〜10人に対応</h3>
+          <h3 data-en>Supports 2–10 players</h3>
+          <p data-ja>プレイヤー人数を自由に設定でき、名前・アイコン・画像も保存できます。</p>
+          <p data-en>Set any number of players and save each one's name, icon, and photo.</p>
+        </div>
+        <div class="card">
+          <div class="icon-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M6 12h.01"/><path d="M18 12h.01"/></svg>
+          </div>
+          <h3 data-ja>ストリートごとの公開演出</h3>
+          <h3 data-en>Street-by-street reveals</h3>
+          <p data-ja>プリフロップ、フロップ、ターン、リバーを順番に公開し、展開をドラマチックに楽しめます。</p>
+          <p data-en>Reveal pre-flop, flop, turn, and river one at a time for maximum suspense.</p>
+        </div>
+        <div class="card">
+          <div class="icon-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8 12 14.7l-4-4L3 16.5"/></svg>
+          </div>
+          <h3 data-ja>ストリートごとのエクイティ表示</h3>
+          <h3 data-en>Live equity overview</h3>
+          <p data-ja>カードが開くたびに変化する各プレイヤーの勝率を確認できます。</p>
+          <p data-en>Track how each player's win rate changes as every card is revealed.</p>
+        </div>
+        <div class="card">
+          <div class="icon-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.63.24 1.14.7 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+          </div>
+          <h3 data-ja>勝者・最弱プレイヤー表示</h3>
+          <h3 data-en>Winner &amp; weakest-player highlights</h3>
+          <p data-ja>リバーの公開後、勝者と最も弱かったプレイヤーをひと目で確認できます。</p>
+          <p data-en>See the winner and the weakest hand highlighted right after the river.</p>
+        </div>
+        <div class="card">
+          <div class="icon-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+          </div>
+          <h3 data-ja>プレイヤーのカスタマイズ</h3>
+          <h3 data-en>Custom players</h3>
+          <p data-ja>名前・アイコン・カードカラーを自由にカスタマイズできます。</p>
+          <p data-en>Customize each player's name, icon, and card color.</p>
+        </div>
+        <div class="card">
+          <div class="icon-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg>
+          </div>
+          <h3 data-ja>8言語対応</h3>
+          <h3 data-en>Available in 8 languages</h3>
+          <p data-ja>日本語、英語を含む8言語のローカライズに対応しています。</p>
+          <p data-en>Localized into eight languages, including Japanese and English.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="games" class="games-section">
+      <div style="padding: var(--space-2xl) var(--space-lg);">
+        <h2 class="section-title" data-ja>対応ゲーム</h2>
+        <h2 class="section-title" data-en>Supported games</h2>
+        <p class="section-sub" data-ja>NLHとPLOはすぐに無料で遊べます。その他のゲームは買い切りパックで解放できます。</p>
+        <p class="section-sub" data-en>NLH and PLO are free to play right away. The rest unlock with one-time packs.</p>
+        <div class="games-grid">
+          <div class="game-row">
+            <span class="game-name">NLH (No-Limit Hold'em)</span>
+            <span class="game-tag tag-free" data-ja>無料</span>
+            <span class="game-tag tag-free" data-en>Free</span>
+          </div>
+          <div class="game-row">
+            <span class="game-name">PLO (Pot-Limit Omaha)</span>
+            <span class="game-tag tag-free" data-ja>無料</span>
+            <span class="game-tag tag-free" data-en>Free</span>
+          </div>
+          <div class="game-row">
+            <span class="game-name">Super Hold'em / Joker Super Hold'em</span>
+            <span class="game-tag tag-pack" data-ja>スーパーホールデムパック</span>
+            <span class="game-tag tag-pack" data-en>Super Hold'em Pack</span>
+          </div>
+          <div class="game-row">
+            <span class="game-name">Stud Hi / Razz / Stud8</span>
+            <span class="game-tag tag-pack" data-ja>スタッドポーカーパック</span>
+            <span class="game-tag tag-pack" data-en>Stud Pack</span>
+          </div>
+          <div class="game-row">
+            <span class="game-name">Scarney / PLO8</span>
+            <span class="game-tag tag-pack" data-ja>ミックスゲームパック Vol.1</span>
+            <span class="game-tag tag-pack" data-en>MixGame Pack Vol.1</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="languages">
+      <h2 class="section-title" data-ja>対応言語</h2>
+      <h2 class="section-title" data-en>Languages</h2>
+      <div class="langs-list">
+        <span class="lang-chip">日本語 / Japanese</span>
+        <span class="lang-chip">English</span>
+        <span class="lang-chip">한국어 / Korean</span>
+        <span class="lang-chip">中文 / Chinese</span>
+        <span class="lang-chip">Español</span>
+        <span class="lang-chip">Français</span>
+        <span class="lang-chip">Deutsch</span>
+        <span class="lang-chip">Português</span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-links">
+        <a href="../privacy-policy/"><span data-ja>プライバシーポリシー</span><span data-en>Privacy Policy</span></a>
+        <a href="https://github.com/NoasProject/FlipoutPoker" target="_blank" rel="noopener"><span data-ja>サポート</span><span data-en>Support</span></a>
+      </div>
+      <div>&copy; 2026 NoasProject</div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = 'pokerflipout-lang';
+      var buttons = document.querySelectorAll('[data-set-lang]');
+
+      function applyLang(lang) {
+        document.documentElement.setAttribute('lang', lang);
+        document.querySelectorAll('[data-ja]').forEach(function (el) {
+          el.style.display = lang === 'ja' ? 'revert' : 'none';
+        });
+        document.querySelectorAll('[data-en]').forEach(function (el) {
+          el.style.display = lang === 'en' ? 'revert' : 'none';
+        });
+        buttons.forEach(function (btn) {
+          btn.classList.toggle('active', btn.getAttribute('data-set-lang') === lang);
+        });
+        try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          applyLang(btn.getAttribute('data-set-lang'));
+        });
+      });
+
+      var saved = null;
+      try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+      if (saved === 'ja' || saved === 'en') {
+        applyLang(saved);
+      } else if ((navigator.language || '').toLowerCase().indexOf('ja') !== 0) {
+        applyLang('en');
+      }
+    })();
+  </script>
+</body>
+</html>
