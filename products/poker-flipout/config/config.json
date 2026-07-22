@@ -1,9 +1,9 @@
 {
-  "config_version": "1.0.0f4",
+  "config_version": "1.0.0f5",
   "ios": {
     "allowed_versions": ["^1\\.0\\.0$"],
     "force_update": false,
-    "can_purchase": false,
+    "can_purchase": true,
     "purchase_product_ids": [
       "app.poker.flipout.iap.item.lock.001.A",
       "app.poker.flipout.iap.item.lock.002.B",
@@ -19,7 +19,7 @@
   "android": {
     "allowed_versions": ["^1\\.0\\.0$"],
     "force_update": false,
-    "can_purchase": false,
+    "can_purchase": true,
     "purchase_product_ids": [
       "app.poker.flipout.iap.item.lock.001.A",
       "app.poker.flipout.iap.item.lock.002.B",
