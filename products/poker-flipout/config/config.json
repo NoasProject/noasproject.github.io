@@ -1,13 +1,13 @@
 {
-  "config_version": "1.0.0f2",
+  "config_version": "1.0.0f3",
   "ios": {
     "allowed_versions": ["^1\\.0\\.0$"],
     "force_update": false,
     "can_purchase": false,
     "purchase_product_ids": [
-      "pokerflipout_super_holdem_pack",
-      "pokerflipout_stud_pack",
-      "pokerflipout_other_pack_vol_1"
+      "app.poker.flipout.iap.item.lock.001.A",
+      "app.poker.flipout.iap.item.lock.002.B",
+      "app.poker.flipout.iap.item.lock.101.A"
     ],
     "purchase_product_id": "",
     "store_url": "",
