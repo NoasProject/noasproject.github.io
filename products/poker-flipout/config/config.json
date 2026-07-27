@@ -1,7 +1,7 @@
 {
-  "config_version": "1.0.0f5",
+  "config_version": "1.0.0f7",
   "ios": {
-    "allowed_versions": ["^1\\.0\\.0$"],
+    "allowed_versions": ["^1\\.0\\.0$", "^1\\.1\\.0$"],
     "force_update": false,
     "can_purchase": true,
     "purchase_product_ids": [
@@ -10,14 +10,14 @@
       "app.poker.flipout.iap.item.lock.101.A"
     ],
     "purchase_product_id": "",
-    "store_url": "",
+    "store_url": "https://apps.apple.com/app/id6790411264",
     "message": {
       "ja": "最新版のPokerFlipoutを利用してください。",
       "en": "Please update PokerFlipout to the latest version."
     }
   },
   "android": {
-    "allowed_versions": ["^1\\.0\\.0$"],
+    "allowed_versions": ["^1\\.0\\.0$", "^1\\.1\\.0$"],
     "force_update": false,
     "can_purchase": true,
     "purchase_product_ids": [
