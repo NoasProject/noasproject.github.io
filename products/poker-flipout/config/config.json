@@ -9,7 +9,6 @@
       "app.poker.flipout.iap.item.lock.002.B",
       "app.poker.flipout.iap.item.lock.101.A"
     ],
-    "purchase_product_id": "",
     "store_url": "https://apps.apple.com/app/id6790411264"
   },
   "android": {
@@ -21,7 +20,6 @@
       "app.poker.flipout.iap.item.lock.002.B",
       "app.poker.flipout.iap.item.lock.101.A"
     ],
-    "purchase_product_id": "",
     "store_url": ""
   }
 }
