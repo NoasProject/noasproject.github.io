@@ -1,5 +1,5 @@
 {
-  "config_version": "1.1.2f2",
+  "config_version": "1.1.2f3",
   "ios": {
     "allowed_versions": ["^1\\.1\\.2$"],
     "force_update": true,
@@ -16,8 +16,8 @@
     "force_update": true,
     "can_purchase": true,
     "purchase_product_ids": [
-      "app.poker.flipout.iap.item.lock.001.A",
-      "app.poker.flipout.iap.item.lock.002.B",
+      "app.poker.flipout.iap.item.lock.001.a",
+      "app.poker.flipout.iap.item.lock.002.b",
       "app.poker.flipout.iap.item.lock.101.a"
     ],
     "store_url": ""
