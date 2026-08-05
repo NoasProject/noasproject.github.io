@@ -1,5 +1,5 @@
 {
-  "config_version": "13",
+  "config_version": "14",
   "ios": {
     "allowed_versions": ["^1\\.1\\.2$"],
     "force_update": true,
@@ -9,6 +9,11 @@
       "app.poker.flipout.iap.item.lock.002.B",
       "app.poker.flipout.iap.item.lock.101.A"
     ],
+    "purchase_products": {
+      "super_holdem_pack": "app.poker.flipout.iap.item.lock.001.A",
+      "stud_pack": "app.poker.flipout.iap.item.lock.002.B",
+      "other_pack_vol_1": "app.poker.flipout.iap.item.lock.101.A"
+    },
     "store_url": "https://apps.apple.com/app/id6790411264"
   },
   "android": {
@@ -20,6 +25,11 @@
       "app.poker.flipout.iap.item.lock.002.b",
       "app.poker.flipout.iap.item.lock.101.a"
     ],
+    "purchase_products": {
+      "super_holdem_pack": "app.poker.flipout.iap.item.lock.001.a",
+      "stud_pack": "app.poker.flipout.iap.item.lock.002.b",
+      "other_pack_vol_1": "app.poker.flipout.iap.item.lock.101.a"
+    },
     "store_url": ""
   }
 }
