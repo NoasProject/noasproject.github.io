@@ -1,5 +1,5 @@
 {
-  "config_version": "12",
+  "config_version": "13",
   "ios": {
     "allowed_versions": ["^1\\.1\\.2$"],
     "force_update": true,
