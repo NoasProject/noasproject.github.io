@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "generated_at": null,
+  "period": {
+    "days": 30,
+    "start_date": null,
+    "end_date": null
+  },
+  "source": "firebase_analytics",
+  "total_uses": 0,
+  "rankings": []
+}
