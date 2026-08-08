@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-08T18:30:53Z",
+  "generated_at": "2026-08-08T18:55:55Z",
   "period": {
     "days": 30,
     "start_date": "2026-07-10",
@@ -58,31 +58,6 @@
       "rank": 10,
       "game_type_id": "razz",
       "usage_count": 3
-    },
-    {
-      "rank": 11,
-      "game_type_id": "stud8",
-      "usage_count": 2
-    },
-    {
-      "rank": 12,
-      "game_type_id": "plo8",
-      "usage_count": 1
-    },
-    {
-      "rank": 13,
-      "game_type_id": "plo5_double_board",
-      "usage_count": 1
-    },
-    {
-      "rank": 14,
-      "game_type_id": "scarney",
-      "usage_count": 1
-    },
-    {
-      "rank": 15,
-      "game_type_id": "plo5c",
-      "usage_count": 0
     }
   ]
 }
