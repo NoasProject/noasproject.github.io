@@ -1,12 +1,88 @@
 {
   "schema_version": 1,
-  "generated_at": null,
+  "generated_at": "2026-08-08T18:30:53Z",
   "period": {
     "days": 30,
-    "start_date": null,
-    "end_date": null
+    "start_date": "2026-07-10",
+    "end_date": "2026-08-08"
   },
   "source": "firebase_analytics",
-  "total_uses": 0,
-  "rankings": []
+  "total_uses": 1453,
+  "rankings": [
+    {
+      "rank": 1,
+      "game_type_id": "nlh",
+      "usage_count": 715
+    },
+    {
+      "rank": 2,
+      "game_type_id": "joker_holdem",
+      "usage_count": 277
+    },
+    {
+      "rank": 3,
+      "game_type_id": "plo",
+      "usage_count": 230
+    },
+    {
+      "rank": 4,
+      "game_type_id": "super_holdem_jokers",
+      "usage_count": 95
+    },
+    {
+      "rank": 5,
+      "game_type_id": "nlh8",
+      "usage_count": 77
+    },
+    {
+      "rank": 6,
+      "game_type_id": "super_holdem8",
+      "usage_count": 22
+    },
+    {
+      "rank": 7,
+      "game_type_id": "super_holdem",
+      "usage_count": 14
+    },
+    {
+      "rank": 8,
+      "game_type_id": "big_o_best_best",
+      "usage_count": 11
+    },
+    {
+      "rank": 9,
+      "game_type_id": "stud_hi",
+      "usage_count": 4
+    },
+    {
+      "rank": 10,
+      "game_type_id": "razz",
+      "usage_count": 3
+    },
+    {
+      "rank": 11,
+      "game_type_id": "stud8",
+      "usage_count": 2
+    },
+    {
+      "rank": 12,
+      "game_type_id": "plo8",
+      "usage_count": 1
+    },
+    {
+      "rank": 13,
+      "game_type_id": "plo5_double_board",
+      "usage_count": 1
+    },
+    {
+      "rank": 14,
+      "game_type_id": "scarney",
+      "usage_count": 1
+    },
+    {
+      "rank": 15,
+      "game_type_id": "plo5c",
+      "usage_count": 0
+    }
+  ]
 }
