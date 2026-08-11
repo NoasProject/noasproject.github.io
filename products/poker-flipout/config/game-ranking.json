@@ -1,48 +1,48 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-08T19:00:12Z",
+  "generated_at": "2026-08-11T01:15:02Z",
   "period": {
     "days": 30,
-    "start_date": "2026-07-10",
-    "end_date": "2026-08-08"
+    "start_date": "2026-07-12",
+    "end_date": "2026-08-10"
   },
   "source": "firebase_analytics",
-  "total_uses": 1453,
+  "total_uses": 1672,
   "rankings": [
     {
       "rank": 1,
       "game_type_id": "nlh",
-      "usage_count": 715
+      "usage_count": 854
     },
     {
       "rank": 2,
       "game_type_id": "joker_holdem",
-      "usage_count": 277
+      "usage_count": 297
     },
     {
       "rank": 3,
       "game_type_id": "plo",
-      "usage_count": 230
+      "usage_count": 267
     },
     {
       "rank": 4,
       "game_type_id": "super_holdem_jokers",
-      "usage_count": 95
+      "usage_count": 104
     },
     {
       "rank": 5,
       "game_type_id": "nlh8",
-      "usage_count": 77
+      "usage_count": 83
     },
     {
       "rank": 6,
-      "game_type_id": "super_holdem8",
+      "game_type_id": "super_holdem",
       "usage_count": 22
     },
     {
       "rank": 7,
-      "game_type_id": "super_holdem",
-      "usage_count": 14
+      "game_type_id": "super_holdem8",
+      "usage_count": 22
     },
     {
       "rank": 8,
