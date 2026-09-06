@@ -1,6 +1,6 @@
 {
   "ios": {
-    "allowed_versions": ["^1\\.1\\.0$", "^1\\.2\\.2$", "^2\\.0\\.0$"],
+    "allowed_versions": ["^1\\.1\\.0$", "^1\\.2\\.2$", "^1\\.2\\.3$", "^2\\.0\\.0$"],
     "force_update": true,
     "store_url": "https://apps.apple.com/app/idXXXXXXXX",
     "message": {
