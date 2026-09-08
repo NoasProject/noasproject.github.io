@@ -8,7 +8,8 @@
     "message": {
       "ja": "このバージョンはサポートが終了しました。\nApp Store から最新版にアップデートしてください。",
       "en": "This version is no longer supported.\nPlease update to the latest version from the App Store."
-    }
+    },
+    "study_pro_product_id": "poker.tournament.blind.floor.study_pro"
   },
   "android": {
     "allowed_versions": [
