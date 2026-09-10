@@ -3,7 +3,6 @@
 import argparse
 import json
 import re
-from datetime import date
 from pathlib import Path
 
 CONFIG_DIR = Path(__file__).resolve().parents[1] / 'products/poker-blind-tournament/config'
@@ -97,18 +96,21 @@ def validate(config, *, v2):
                 raise ValueError(f'{os}.study_pro_entitlement_product_ids: must include active product ID')
             promotion = settings.get('study_pro_promotion')
             if promotion is not None:
-                if not isinstance(promotion, dict) or set(promotion) != {'percent_off', 'ends_on'}:
-                    raise ValueError(f'{os}.study_pro_promotion: percent_off and ends_on required')
+                if not isinstance(promotion, dict) or set(promotion) != {
+                        'percent_off', 'starts_at', 'ends_at'}:
+                    raise ValueError(
+                        f'{os}.study_pro_promotion: percent_off, starts_at and ends_at required'
+                    )
                 percent_off = promotion['percent_off']
-                ends_on = promotion['ends_on']
+                starts_at = promotion['starts_at']
+                ends_at = promotion['ends_at']
                 if type(percent_off) is not int or not 1 <= percent_off <= 99:
                     raise ValueError(f'{os}.study_pro_promotion.percent_off: integer from 1 through 99 required')
-                if not isinstance(ends_on, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', ends_on):
-                    raise ValueError(f'{os}.study_pro_promotion.ends_on: YYYY-MM-DD required')
-                try:
-                    date.fromisoformat(ends_on)
-                except ValueError as error:
-                    raise ValueError(f'{os}.study_pro_promotion.ends_on: invalid date') from error
+                if (type(starts_at) is not int or type(ends_at) is not int or
+                        not 0 <= starts_at < ends_at <= 253402300799):
+                    raise ValueError(
+                        f'{os}.study_pro_promotion: UTC Unix-second timestamps with starts_at < ends_at required'
+                    )
         else:
             messages = settings['message']
             if not isinstance(messages, dict) or not {'ja', 'en'} <= set(messages):

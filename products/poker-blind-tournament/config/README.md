@@ -28,3 +28,17 @@ python3 scripts/validate_poker_config.py --file products/poker-blind-tournament/
 ```
 
 TestFlightのビルド・アップロードはアプリリポジトリの `scripts/release_testflight.py` を使います。対象iOSバージョンが不足していれば既存設定を残して完全一致パターンを追加し、公開URLで許可を確認してからビルドします。Config検証・push・公開確認の失敗時はビルドもアップロードも行いません。
+
+## Study Proの期間限定セール
+
+v2 Configの`ios`と`android`へ同じ`study_pro_promotion`を設定します。時刻はUTCのUnix timestamp（秒）です。
+
+```json
+"study_pro_promotion": {
+  "percent_off": 30,
+  "starts_at": 1788238800,
+  "ends_at": 1790780400
+}
+```
+
+期間は`starts_at`以上、`ends_at`未満です。セールを表示しない場合は`null`を設定します。ストアの価格予約も同じ開始・終了時刻に設定してください。アプリは境界時刻にストアの商品情報を再取得します。

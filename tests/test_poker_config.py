@@ -49,14 +49,19 @@ class ConfigTests(unittest.TestCase):
         validate(self.config, v2=True)
 
     def test_promotion_must_be_valid_and_common_to_both_platforms(self):
-        promotion = {'percent_off': 30, 'ends_on': '2026-09-30'}
+        promotion = {
+            'percent_off': 30,
+            'starts_at': 1788238800,
+            'ends_at': 1790780400,
+        }
         self.config['ios']['study_pro_promotion'] = promotion
         self.config['android']['study_pro_promotion'] = copy.deepcopy(promotion)
         validate(self.config, v2=True)
         for invalid in [
-            {'percent_off': 0, 'ends_on': '2026-09-30'},
-            {'percent_off': 100, 'ends_on': '2026-09-30'},
-            {'percent_off': 30, 'ends_on': '2026-02-30'},
+            {'percent_off': 0, 'starts_at': 1788238800, 'ends_at': 1790780400},
+            {'percent_off': 100, 'starts_at': 1788238800, 'ends_at': 1790780400},
+            {'percent_off': 30, 'starts_at': 1790780400, 'ends_at': 1788238800},
+            {'percent_off': 30, 'starts_at': '1788238800', 'ends_at': 1790780400},
         ]:
             config = copy.deepcopy(self.config)
             config['ios']['study_pro_promotion'] = invalid
