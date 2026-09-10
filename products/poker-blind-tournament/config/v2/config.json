@@ -12,6 +12,7 @@
     "study_pro_entitlement_product_ids": [
       "poker.tournament.blind.floor.study_pro"
     ],
+    "study_pro_promotion": null,
     "study_pro_purchase_enabled": true
   },
   "android": {
@@ -27,6 +28,7 @@
     "study_pro_entitlement_product_ids": [
       "poker.tournament.blind.floor.study_pro"
     ],
+    "study_pro_promotion": null,
     "study_pro_purchase_enabled": true
   }
 }

@@ -22,7 +22,11 @@ class ConfigTests(unittest.TestCase):
             ('allowed_versions', [r'^2\.0\.0$', r'^2\.0\.0$']),
             ('force_update', 'true'), ('store_url', 'https://apps.apple.com/app/idXXXXXXXX'),
             ('message', {'ja': 'test'}), ('message', {'ja': '', 'en': 'test'}),
-            ('study_pro_product_id', 'wrong.id'), ('study_pro_purchase_enabled', 'false'),
+            ('message_key', 'unknownMessage'), ('offline_access_hours', 0),
+            ('connection_reminder_hours', [10, 24, 3]),
+            ('study_pro_product_id', 'invalid product id'),
+            ('study_pro_entitlement_product_ids', []),
+            ('study_pro_purchase_enabled', 'false'),
         ]:
             with self.subTest(key=key, value=value):
                 config = copy.deepcopy(self.config)
@@ -30,7 +34,7 @@ class ConfigTests(unittest.TestCase):
                 with self.assertRaises(ValueError): validate(config, v2=True)
 
     def test_missing_and_typo_keys(self):
-        for key in self.config['ios']:
+        for key in set(self.config['ios']) - {'study_pro_promotion'}:
             config = copy.deepcopy(self.config)
             del config['ios'][key]
             with self.assertRaises(ValueError): validate(config, v2=True)
@@ -43,6 +47,23 @@ class ConfigTests(unittest.TestCase):
             validate(self.config, v2=True)
         self.config['ios']['study_pro_purchase_enabled'] = False
         validate(self.config, v2=True)
+
+    def test_promotion_must_be_valid_and_common_to_both_platforms(self):
+        promotion = {'percent_off': 30, 'ends_on': '2026-09-30'}
+        self.config['ios']['study_pro_promotion'] = promotion
+        self.config['android']['study_pro_promotion'] = copy.deepcopy(promotion)
+        validate(self.config, v2=True)
+        for invalid in [
+            {'percent_off': 0, 'ends_on': '2026-09-30'},
+            {'percent_off': 100, 'ends_on': '2026-09-30'},
+            {'percent_off': 30, 'ends_on': '2026-02-30'},
+        ]:
+            config = copy.deepcopy(self.config)
+            config['ios']['study_pro_promotion'] = invalid
+            config['android']['study_pro_promotion'] = copy.deepcopy(invalid)
+            with self.assertRaises(ValueError): validate(config, v2=True)
+        self.config['android']['study_pro_promotion']['percent_off'] = 20
+        with self.assertRaises(ValueError): validate(self.config, v2=True)
 
     def test_version_matching(self):
         self.config['ios']['allowed_versions'] = [r'^2\.0\.0$', r'^2\.1\.[0-9]+$']

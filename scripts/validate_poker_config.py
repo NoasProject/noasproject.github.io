@@ -87,8 +87,6 @@ def validate(config, *, v2):
             if product_id not in ('', None) and (
                     not isinstance(product_id, str) or not PRODUCT_ID_PATTERN.fullmatch(product_id)):
                 raise ValueError(f'{os}.study_pro_product_id: invalid product ID')
-            if settings['study_pro_purchase_enabled'] and not product_id:
-                raise ValueError(f'{os}.study_pro_product_id: required while purchases are enabled')
             entitlement_ids = settings['study_pro_entitlement_product_ids']
             if (not isinstance(entitlement_ids, list) or not entitlement_ids or
                     any(not isinstance(value, str) or not PRODUCT_ID_PATTERN.fullmatch(value)
@@ -118,6 +116,8 @@ def validate(config, *, v2):
             if any(not isinstance(k, str) or not k.strip() or not isinstance(v, str) or not v.strip()
                    for k, v in messages.items()):
                 raise ValueError(f'{os}.message: nonempty language keys and texts required')
+    if v2 and config['ios'].get('study_pro_promotion') != config['android'].get('study_pro_promotion'):
+        raise ValueError('study_pro_promotion: ios and android must use the same promotion')
 
 
 def allows(config, platform, version):
