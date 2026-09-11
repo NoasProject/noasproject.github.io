@@ -3,1187 +3,362 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Poker Blind Tournament | 公式ランディング</title>
-  <meta name="description" content="Poker Blind Tournament は、ポーカートーナメントのブラインド構成を設定し、各プレイヤーのスタックをBB数で把握しやすくするアプリです。" />
-  <meta property="og:title" content="Poker Blind Tournament" />
+  <meta name="theme-color" content="#080d1c" />
+  <title>Poker MTT Note | トーナメント運営と勉強会の記録をひとつに</title>
+  <meta name="description" content="Poker MTT Noteは、ブラインドタイマー、スタック管理、勉強会のハンド記録・分析・同一Wi-Fi共有、EQ計算をひとつにまとめたiPhoneアプリです。" />
+  <meta property="og:title" content="Poker MTT Note" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ja_JP" />
-  <meta property="og:description" content="ブラインド構成を設定し、スタックをBB数で分かりやすく確認できるポーカートーナメント管理アプリ。" />
+  <meta property="og:description" content="トーナメントを進める日も、一手を深く振り返る日も。運営と学びをひとつにまとめたポーカーMTTノート。" />
+  <meta property="og:image" content="https://noasproject.github.io/products/poker-blind-tournament/resources/screenshot/app_store/ja/01_menu.png" />
+  <link rel="canonical" href="https://noasproject.github.io/products/poker-blind-tournament/web-site/" />
   <link rel="icon" type="image/png" href="../resources/app_icon/app_icon.png" />
   <style>
     :root {
       color-scheme: dark;
-      --bg: #07101f;
-      --bg-deep: #040812;
-      --surface: rgba(14, 26, 48, 0.78);
-      --surface-strong: rgba(18, 32, 59, 0.96);
-      --line: rgba(167, 188, 255, 0.14);
-      --line-strong: rgba(167, 188, 255, 0.24);
-      --text: #edf2ff;
-      --muted: #a9b6d3;
-      --soft: #7f8db0;
-      --accent: #7c9cff;
-      --accent-strong: #9db3ff;
-      --accent-soft: rgba(124, 156, 255, 0.16);
-      --teal: #78d6d0;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
-      --radius-lg: 28px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
+      --bg: #080d1c; --surface: rgba(18, 28, 52, .78); --solid: #121c34;
+      --line: rgba(165, 183, 226, .16); --line-strong: rgba(165, 183, 226, .3);
+      --text: #f7f9ff; --muted: #b4bed6; --soft: #8793af;
+      --blue: #6ea6ff; --blue-strong: #a9c8ff; --green: #58d6a4; --gold: #ffd166;
+      --shadow: 0 28px 80px rgba(0, 0, 0, .38); --content: 1160px;
     }
-
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      min-height: 100vh;
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(93, 109, 255, 0.24), transparent 30%),
-        radial-gradient(circle at 85% 18%, rgba(98, 200, 255, 0.14), transparent 24%),
-        linear-gradient(180deg, #0a1630 0%, var(--bg) 42%, var(--bg-deep) 100%);
+      min-width: 320px; min-height: 100vh; margin: 0; color: var(--text);
+      background: radial-gradient(circle at 12% 8%, rgba(52, 91, 186, .24), transparent 29rem),
+        radial-gradient(circle at 92% 33%, rgba(26, 135, 102, .16), transparent 26rem),
+        linear-gradient(180deg, #0a1124, var(--bg) 42%, #050811);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+      font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
     }
-
-    a { color: inherit; }
-    img { max-width: 100%; display: block; }
-
-    .page {
-      width: min(1120px, calc(100% - 32px));
-      margin: 0 auto;
-      position: relative;
+    a { color: inherit; } img { display: block; max-width: 100%; height: auto; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .skip {
+      position: fixed; top: 10px; left: 10px; z-index: 100; padding: 10px 14px;
+      border-radius: 10px; color: #07101f; background: #fff; transform: translateY(-150%);
     }
-
-    .page::before,
-    .page::after {
-      content: "";
-      position: fixed;
-      inset: auto;
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      filter: blur(90px);
-      pointer-events: none;
-      opacity: 0.42;
-      z-index: 0;
-    }
-
-    .page::before {
-      top: 72px;
-      right: -120px;
-      background: rgba(92, 105, 255, 0.24);
-    }
-
-    .page::after {
-      left: -140px;
-      bottom: 8%;
-      background: rgba(55, 113, 255, 0.16);
-    }
-
-    .page > * {
-      position: relative;
-      z-index: 1;
-    }
-
+    .skip:focus { transform: translateY(0); }
+    .shell { width: min(var(--content), calc(100% - 40px)); margin: 0 auto; }
     header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 24px 0 18px;
+      position: sticky; top: 14px; z-index: 20; display: flex; align-items: center;
+      justify-content: space-between; gap: 24px; margin-top: 14px; padding: 10px 12px 10px 14px;
+      border: 1px solid var(--line); border-radius: 20px; background: rgba(9, 14, 30, .74);
+      box-shadow: 0 16px 50px rgba(0, 0, 0, .22); backdrop-filter: blur(22px) saturate(150%);
+      -webkit-backdrop-filter: blur(22px) saturate(150%);
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
+    .brand { display: inline-flex; align-items: center; gap: 11px; min-width: 0; text-decoration: none; }
+    .brand img {
+      width: 42px; height: 42px; flex: 0 0 auto; border: 1px solid rgba(255,255,255,.16);
+      border-radius: 13px; box-shadow: 0 10px 28px rgba(32,54,126,.28);
     }
-
-    .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 18px 40px rgba(39, 58, 130, 0.25);
-      background: rgba(255, 255, 255, 0.04);
+    .brand-copy { min-width: 0; }
+    .brand-name {
+      display: block; overflow: hidden; font-size: 14px; font-weight: 750; line-height: 1.25;
+      letter-spacing: -.01em; text-overflow: ellipsis; white-space: nowrap;
     }
-
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .brand strong {
-      display: block;
-      font-size: 15px;
-      line-height: 1.2;
-    }
-
-    .brand small {
-      color: var(--soft);
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    nav {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
+    .brand-mark { display: block; color: var(--soft); font-size: 10px; font-weight: 700; letter-spacing: .14em; }
+    nav { display: flex; align-items: center; gap: 4px; }
     nav a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
+      min-height: 44px; padding: 11px 13px; border-radius: 12px; color: var(--muted);
+      font-size: 13px; font-weight: 650; text-decoration: none;
+      transition: color 180ms ease, background-color 180ms ease;
     }
-
-    nav a:hover { color: var(--text); }
-
+    nav a:hover { color: var(--text); background: rgba(255,255,255,.06); }
+    a:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+    main { overflow: clip; }
     .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 320px);
-      gap: 28px;
-      align-items: center;
-      padding: 28px 0 56px;
+      display: grid; grid-template-columns: minmax(0,1fr) minmax(300px,414px);
+      gap: clamp(40px,7vw,92px); align-items: center; min-height: 740px; padding: 72px 0 80px;
     }
-
+    .hero-copy { position: relative; z-index: 2; }
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(124, 156, 255, 0.1);
-      border: 1px solid rgba(124, 156, 255, 0.2);
-      color: #c6d4ff;
-      font-size: 13px;
-      letter-spacing: 0.02em;
+      display: inline-flex; align-items: center; gap: 9px; margin: 0 0 22px;
+      color: var(--blue-strong); font-size: 13px; font-weight: 750; letter-spacing: .08em;
     }
-
     .eyebrow::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--teal);
-      box-shadow: 0 0 16px rgba(120, 214, 208, 0.8);
+      width: 9px; height: 9px; border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 18px rgba(88,214,164,.72); content: "";
     }
-
+    h1,h2,h3,p { overflow-wrap: anywhere; }
     h1 {
-      margin: 18px 0 14px;
-      font-size: clamp(34px, 6vw, 62px);
-      line-height: 1.04;
-      letter-spacing: -0.04em;
+      max-width: 760px; margin: 0; font-size: clamp(2.7rem,6vw,5.25rem);
+      font-weight: 800; line-height: 1.02; letter-spacing: -.055em;
     }
-
-    h1 .accent {
-      color: var(--accent-strong);
-      text-shadow: 0 0 24px rgba(124, 156, 255, 0.25);
+    .accent {
+      color: transparent; background: linear-gradient(110deg,#b9d1ff 8%,#71a9ff 52%,#65deb0 96%);
+      background-clip: text; -webkit-background-clip: text;
     }
-
     .lead {
-      margin: 0;
-      max-width: 620px;
-      color: var(--muted);
-      font-size: clamp(15px, 2.4vw, 18px);
-      line-height: 1.85;
+      max-width: 680px; margin: 26px 0 0; color: var(--muted);
+      font-size: clamp(1rem,2vw,1.2rem); line-height: 1.9;
     }
-
-    .cta {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 24px;
-    }
-
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
     .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 18px;
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px;
+      padding: 13px 20px; border: 1px solid transparent; border-radius: 16px; font-weight: 750;
+      text-decoration: none; cursor: pointer;
+      transition: background-color 180ms ease,border-color 180ms ease,transform 120ms ease;
     }
-
-    .button:hover { transform: translateY(-1px); }
-
-    .button.primary {
-      color: #07101f;
-      background: linear-gradient(135deg, #d8e3ff, #9bb1ff);
-      box-shadow: 0 18px 34px rgba(95, 122, 226, 0.24);
+    .button:active { transform: scale(.975); }
+    .primary { color: #06101d; background: linear-gradient(135deg,#c4d8ff,#75adff); box-shadow: 0 18px 36px rgba(76,131,226,.24); }
+    .primary:hover { background: linear-gradient(135deg,#d5e3ff,#8bbaff); }
+    .secondary { border-color: var(--line-strong); background: rgba(255,255,255,.04); }
+    .secondary:hover { border-color: rgba(165,183,226,.46); background: rgba(255,255,255,.07); }
+    .button svg { width: 20px; height: 20px; }
+    .facts {
+      display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 24px 0 0; padding: 0;
+      color: var(--soft); font-size: 13px; list-style: none;
     }
-
-    .button.secondary {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--line-strong);
+    .facts li { display: inline-flex; align-items: center; gap: 7px; }
+    .facts svg { width: 16px; height: 16px; color: var(--green); }
+    .hero-visual { position: relative; isolation: isolate; }
+    .hero-visual::before {
+      position: absolute; inset: 16% -20% 10%; z-index: -1; border-radius: 50%;
+      background: radial-gradient(circle,rgba(65,126,224,.32),rgba(32,146,108,.12) 42%,transparent 70%);
+      filter: blur(24px); content: "";
     }
-
-    .hero-meta {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 24px;
+    .device {
+      overflow: hidden; border: 1px solid rgba(128,171,255,.3); border-radius: 44px;
+      background: #07101f; box-shadow: var(--shadow),0 0 0 8px rgba(255,255,255,.025); transform: rotate(1.4deg);
     }
-
-    .hero-meta .stat,
-    .panel,
-    .card,
-    .timeline-item,
-    .info-card,
-    .screen-card {
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      background: var(--surface);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+    .note {
+      position: absolute; left: -76px; bottom: 11%; max-width: 210px; padding: 14px 16px;
+      border: 1px solid rgba(88,214,164,.3); border-radius: 18px; background: rgba(10,35,35,.86);
+      box-shadow: 0 18px 50px rgba(0,0,0,.32); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
     }
-
-    .hero-meta .stat {
-      padding: 16px;
-      border-radius: var(--radius-sm);
+    .note strong { display: block; color: #dcfff1; font-size: 13px; }
+    .note span { display: block; margin-top: 3px; color: #9ccab8; font-size: 11px; line-height: 1.5; }
+    .section { padding: 88px 0; }
+    .heading { max-width: 750px; margin-bottom: 34px; }
+    .kicker { margin: 0 0 10px; color: var(--blue); font-size: 12px; font-weight: 800; letter-spacing: .14em; }
+    .heading h2 {
+      margin: 0; font-size: clamp(2rem,4.5vw,3.8rem); line-height: 1.08; letter-spacing: -.045em;
     }
-
-    .support-note {
-      margin-top: 18px;
-      padding: 16px 18px;
-      border-radius: var(--radius-md);
-      background: rgba(10, 20, 38, 0.88);
-      border: 1px solid var(--line-strong);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+    .heading > p:last-child { margin: 18px 0 0; color: var(--muted); line-height: 1.85; }
+    .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .mode {
+      min-height: 390px; padding: clamp(24px,4vw,42px); border: 1px solid var(--line);
+      border-radius: 32px; background: linear-gradient(150deg,rgba(25,48,91,.78),rgba(12,20,40,.9)); box-shadow: var(--shadow);
     }
-
-    .support-note strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      color: #ffffff;
+    .mode.study { border-color: rgba(88,214,164,.22); background: linear-gradient(150deg,rgba(18,78,60,.72),rgba(10,31,31,.9)); }
+    .icon {
+      display: grid; place-items: center; width: 50px; height: 50px; border: 1px solid rgba(126,171,255,.24);
+      border-radius: 16px; color: var(--blue-strong); background: rgba(75,126,218,.14);
     }
-
-    .support-note p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
+    .study .icon,.green .icon { border-color: rgba(88,214,164,.26); color: #9ce7c9; background: rgba(32,150,109,.13); }
+    .gold .icon { border-color: rgba(255,209,102,.25); color: var(--gold); background: rgba(255,209,102,.1); }
+    .icon svg { width: 25px; height: 25px; }
+    .mode h3 { margin: 24px 0 10px; font-size: 1.55rem; letter-spacing: -.025em; }
+    .mode > p { margin: 0; color: var(--muted); line-height: 1.8; }
+    .mode ul { display: grid; gap: 11px; margin: 24px 0 0; padding: 0; list-style: none; }
+    .mode li { display: flex; gap: 10px; color: #dbe3f5; font-size: 14px; }
+    .mode li::before { flex: 0 0 auto; color: var(--blue); font-weight: 800; content: "—"; }
+    .mode.study li::before { color: var(--green); }
+    .gallery { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 16px; align-items: start; }
+    figure { margin: 0; }
+    .shot {
+      overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: var(--solid);
+      box-shadow: 0 20px 48px rgba(0,0,0,.28); transition: border-color 180ms ease,transform 180ms ease;
     }
-
-    .hero-meta strong {
-      display: block;
-      font-size: 22px;
-      line-height: 1.1;
-      margin-bottom: 4px;
-      color: #ffffff;
+    .shot:hover { border-color: rgba(126,171,255,.42); transform: translateY(-3px); }
+    figure:nth-child(3) .shot,figure:nth-child(4) .shot { border-color: rgba(88,214,164,.23); }
+    figcaption { padding: 14px 4px 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    figcaption strong { display: block; color: var(--text); font-size: 13px; }
+    .features { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+    .feature {
+      min-height: 246px; padding: 25px; border: 1px solid var(--line); border-radius: 24px;
+      background: var(--surface); box-shadow: 0 20px 54px rgba(0,0,0,.2);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     }
-
-    .hero-meta span {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
+    .feature h3 { margin: 21px 0 8px; font-size: 1.08rem; }
+    .feature p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.78; }
+    .pro {
+      display: grid; grid-template-columns: minmax(0,1.15fr) minmax(280px,.85fr); gap: 28px; align-items: center;
+      padding: clamp(28px,5vw,56px); border: 1px solid rgba(255,209,102,.22); border-radius: 32px;
+      background: radial-gradient(circle at 85% 18%,rgba(255,209,102,.12),transparent 16rem),
+        linear-gradient(140deg,rgba(36,33,34,.94),rgba(14,20,37,.96)); box-shadow: var(--shadow);
     }
-
-    .panel {
-      width: 100%;
-      max-width: 320px;
-      justify-self: center;
-      padding: 18px;
-      border-radius: var(--radius-lg);
-      position: relative;
-      overflow: hidden;
+    .badge {
+      display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border: 1px solid rgba(255,209,102,.26);
+      border-radius: 999px; color: #ffe6a2; background: rgba(255,209,102,.08); font-size: 12px; font-weight: 800;
     }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto;
-      height: 120px;
-      background: linear-gradient(180deg, rgba(159, 178, 255, 0.12), rgba(159, 178, 255, 0));
-      pointer-events: none;
+    .badge svg,.checks svg { width: 17px; height: 17px; flex: 0 0 auto; }
+    .pro h2 { margin: 18px 0 12px; font-size: clamp(2rem,4vw,3.5rem); line-height: 1.1; letter-spacing: -.045em; }
+    .pro p { margin: 0; color: var(--muted); line-height: 1.85; }
+    .free { margin-top: 18px !important; color: #9ce7c9 !important; font-size: 14px; font-weight: 700; }
+    .checks { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+    .checks li {
+      display: flex; gap: 11px; padding: 15px 16px; border: 1px solid rgba(255,209,102,.13);
+      border-radius: 15px; color: #f3ead4; background: rgba(255,255,255,.035); font-size: 14px;
     }
-
-    .panel.screenshot-panel {
-      padding: 0;
-      background: transparent;
-      border: 0;
-      box-shadow: none;
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
+    .checks svg { margin-top: 2px; color: var(--gold); }
+    .privacy {
+      display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start; padding: 28px;
+      border: 1px solid rgba(88,214,164,.2); border-radius: 24px; background: rgba(16,71,54,.34);
     }
-
-    .panel.screenshot-panel::before {
-      display: none;
-    }
-
-    .phone-shell {
-      position: relative;
-      border-radius: 34px;
-      padding: 12px;
-      background: linear-gradient(180deg, rgba(13, 21, 41, 0.98), rgba(7, 12, 24, 0.98));
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.48);
-    }
-
-    .phone-shell::before {
-      content: "";
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90px;
-      height: 7px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .phone-shell.image-shell {
-      padding: 0;
-      overflow: hidden;
-      background: transparent;
-      border: 0;
-      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
-      border-radius: 34px;
-    }
-
-    .phone-shell.image-shell::before {
-      display: none;
-    }
-
-    .hero-screenshot {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 0;
-      box-shadow: none;
-      opacity: 1;
-      transition: opacity 0.45s ease;
-    }
-
-    .hero-screenshot.is-fading {
-      opacity: 0.18;
-    }
-
-    .screen {
-      border-radius: 24px;
-      overflow: hidden;
-      padding: 22px 18px 18px;
-      min-height: 548px;
-      background:
-        radial-gradient(circle at top right, rgba(157, 179, 255, 0.16), transparent 22%),
-        linear-gradient(180deg, #142342 0%, #0b1731 48%, #091020 100%);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .screen-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #cfd9ff;
-      font-size: 12px;
-      margin-bottom: 18px;
-    }
-
-    .screen-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .screen-title strong {
-      display: block;
-      font-size: 22px;
-      line-height: 1.1;
-    }
-
-    .screen-title span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .chip {
-      padding: 9px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #dbe5ff;
-      background: rgba(124, 156, 255, 0.16);
-      border: 1px solid rgba(124, 156, 255, 0.24);
-    }
-
-    .screen-grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .screen-card {
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .screen-card.muted {
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .row + .row {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .label {
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .value {
-      font-size: 20px;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .blind-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .blind-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .blind-item.active {
-      background: linear-gradient(135deg, rgba(124, 156, 255, 0.2), rgba(124, 156, 255, 0.08));
-      border-color: rgba(124, 156, 255, 0.28);
-    }
-
-    .blind-item strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 2px;
-    }
-
-    .blind-item span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .blind-item .time {
-      font-weight: 700;
-      color: #dfe7ff;
-      font-size: 14px;
-    }
-
-    section {
-      padding: 18px 0 20px;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(24px, 3vw, 34px);
-      letter-spacing: -0.03em;
-    }
-
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 560px;
-      line-height: 1.8;
-      font-size: 15px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .card {
-      border-radius: 22px;
-      padding: 20px;
-      min-height: 178px;
-    }
-
-    .card .icon {
-      width: 44px;
-      height: 44px;
-      display: grid;
-      place-items: center;
-      border-radius: 14px;
-      margin-bottom: 16px;
-      color: #ffffff;
-      font-size: 18px;
-      font-weight: 700;
-      background: linear-gradient(135deg, rgba(157, 179, 255, 0.28), rgba(80, 106, 209, 0.28));
-      border: 1px solid rgba(157, 179, 255, 0.18);
-    }
-
-    .card h3,
-    .timeline-item h3,
-    .info-card h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-      color: #ffffff;
-    }
-
-    .card p,
-    .timeline-item p,
-    .info-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.75;
-    }
-
-    .timeline {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .shots-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .shot-card {
-      padding: 14px;
-      border-radius: 24px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .shot-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 18px;
-    }
-
-    .timeline-item {
-      border-radius: 22px;
-      padding: 22px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .timeline-item::before {
-      content: attr(data-step);
-      position: absolute;
-      top: 16px;
-      right: 18px;
-      font-size: 40px;
-      font-weight: 800;
-      color: rgba(157, 179, 255, 0.1);
-      letter-spacing: -0.05em;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .info-card {
-      padding: 18px;
-      border-radius: 20px;
-    }
-
-    .info-card span {
-      display: block;
-      color: var(--soft);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
+    .privacy .icon { border-color: rgba(88,214,164,.25); color: var(--green); background: rgba(88,214,164,.1); }
+    .privacy h2 { margin: 0 0 7px; font-size: 1.25rem; }
+    .privacy p { margin: 0; color: #b9d7cc; font-size: 14px; line-height: 1.8; }
+    .final { padding: 100px 24px; text-align: center; }
+    .final h2 { max-width: 760px; margin: 0 auto; font-size: clamp(2.25rem,5vw,4.5rem); line-height: 1.05; letter-spacing: -.05em; }
+    .final p { max-width: 620px; margin: 20px auto 28px; color: var(--muted); line-height: 1.85; }
+    .final .actions { justify-content: center; margin-top: 0; }
     footer {
-      margin-top: 34px;
-      padding: 24px 0 42px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      color: var(--soft);
-      font-size: 13px;
+      display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 28px 0 42px;
+      border-top: 1px solid var(--line); color: var(--soft); font-size: 12px;
     }
-
-    footer a {
-      color: #c7d4ff;
-      text-decoration: none;
+    .footer-links { display: flex; flex-wrap: wrap; gap: 18px; }
+    .footer-links a { min-height: 44px; display: inline-flex; align-items: center; color: var(--muted); text-underline-offset: 4px; }
+    .reveal { animation: reveal 700ms cubic-bezier(.22,1,.36,1) both; }
+    .hero-visual.reveal { animation-delay: 90ms; }
+    @keyframes reveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 1040px) {
+      .hero { grid-template-columns: minmax(0,1fr) 340px; gap: 44px; }
+      .note { left: -40px; } .gallery { grid-template-columns: repeat(3,minmax(0,1fr)); }
+      .features { grid-template-columns: repeat(2,minmax(0,1fr)); }
     }
-
-    footer a:hover { text-decoration: underline; }
-
-    .footer-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
+    @media (max-width: 780px) {
+      .shell { width: min(var(--content),calc(100% - 24px)); }
+      header { top: 8px; margin-top: 8px; } nav a:not(.download) { display: none; }
+      nav .download { padding-inline: 12px; color: #06101d; background: #9cc2ff; }
+      .hero { grid-template-columns: 1fr; min-height: 0; padding: 58px 0 64px; }
+      .hero-copy { text-align: center; } .eyebrow,.actions,.facts { justify-content: center; }
+      .lead { margin-inline: auto; } .hero-visual { width: min(78vw,380px); margin: 0 auto; }
+      .note { left: -24px; } .modes,.pro { grid-template-columns: 1fr; } .mode { min-height: 0; }
+      .gallery { grid-template-columns: repeat(2,minmax(0,1fr)); } .section { padding: 68px 0; }
     }
-
-    .contact-trigger {
-      padding: 0;
-      border: 0;
-      background: transparent;
-      color: #c7d4ff;
-      font-size: 13px;
-      text-decoration: none;
-      cursor: pointer;
+    @media (max-width: 520px) {
+      .brand img { width: 38px; height: 38px; border-radius: 12px; }
+      header { padding: 8px 9px 8px 10px; border-radius: 17px; }
+      .brand-name { max-width: 128px; font-size: 13px; } .brand-mark { font-size: 9px; }
+      h1 { font-size: clamp(2.45rem,13vw,3.7rem); } .lead { font-size: 15px; }
+      .actions { display: grid; } .button { width: 100%; } .facts { display: grid; text-align: left; }
+      .hero-visual { width: min(84vw,360px); } .note { left: -10px; bottom: 8%; max-width: 184px; }
+      .gallery { gap: 10px; } .shot { border-radius: 17px; } figcaption { padding-top: 9px; }
+      .features { grid-template-columns: 1fr; } .feature { min-height: 0; }
+      .privacy { grid-template-columns: 1fr; } footer { align-items: flex-start; flex-direction: column; }
+      .final { padding-inline: 0; }
     }
-
-    .contact-trigger:hover {
-      text-decoration: underline;
-    }
-
-    .contact-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 38;
-      background: rgba(2, 6, 18, 0.52);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-    }
-
-    .contact-backdrop[hidden] {
-      display: none;
-    }
-
-    .contact-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 40;
-      width: min(460px, calc(100vw - 24px));
-      padding: 20px;
-      border-radius: 22px;
-      background: rgba(12, 22, 44, 0.96);
-      border: 1px solid rgba(124, 156, 255, 0.22);
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .contact-modal[hidden] {
-      display: none;
-    }
-
-    .contact-modal h2 {
-      margin: 0 0 8px;
-      font-size: 18px;
-      color: #fff;
-    }
-
-    .contact-modal p {
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    .contact-form {
-      display: grid;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .form-field {
-      display: grid;
-      gap: 6px;
-    }
-
-    .form-field label {
-      color: var(--soft);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .form-field input,
-    .form-field textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.04);
-      color: #fff;
-      font-size: 14px;
-      font: inherit;
-      outline: none;
-    }
-
-    .form-field input::placeholder,
-    .form-field textarea::placeholder {
-      color: #92a0c1;
-    }
-
-    .form-field input:focus,
-    .form-field textarea:focus {
-      border-color: rgba(124, 156, 255, 0.42);
-      box-shadow: 0 0 0 3px rgba(124, 156, 255, 0.12);
-    }
-
-    .form-field textarea {
-      min-height: 130px;
-      resize: vertical;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .modal-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 11px 14px;
-      border-radius: 999px;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 700;
-      border: 1px solid transparent;
-      cursor: pointer;
-    }
-
-    .modal-button.primary {
-      color: #07101f;
-      background: linear-gradient(135deg, #d8e3ff, #9bb1ff);
-    }
-
-    .modal-button.secondary {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    @keyframes floatIn {
-      from {
-        opacity: 0;
-        transform: translateY(18px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .hero-copy,
-    .panel,
-    .card,
-    .timeline-item,
-    .info-card {
-      animation: floatIn 0.7s ease both;
-    }
-
-    .panel { animation-delay: 0.08s; }
-    .card:nth-child(2), .timeline-item:nth-child(2), .info-card:nth-child(2) { animation-delay: 0.08s; }
-    .card:nth-child(3), .timeline-item:nth-child(3), .info-card:nth-child(3) { animation-delay: 0.14s; }
-    .card:nth-child(4), .info-card:nth-child(4) { animation-delay: 0.2s; }
-    .card:nth-child(5) { animation-delay: 0.26s; }
-    .card:nth-child(6) { animation-delay: 0.32s; }
-
     @media (prefers-reduced-motion: reduce) {
-      .hero-copy,
-      .panel,
-      .card,
-      .timeline-item,
-      .info-card {
-        animation: none;
-      }
-
-      .button:hover {
-        transform: none;
-      }
+      html { scroll-behavior: auto; } .reveal { animation: none; } .shot,.button { transition: none; }
+      .shot:hover,.button:active { transform: none; }
     }
-
-    @media (max-width: 980px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .panel {
-        max-width: 320px;
-        margin: 0 auto;
-      }
-
-      .grid,
-      .timeline,
-      .shots-grid,
-      .info-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .section-head {
-        align-items: start;
-        flex-direction: column;
-      }
+    @media (prefers-reduced-transparency: reduce) {
+      header,.feature,.note { background: var(--solid); backdrop-filter: none; -webkit-backdrop-filter: none; }
     }
-
-    @media (max-width: 720px) {
-      .page {
-        width: min(100% - 24px, 1120px);
-      }
-
-      header {
-        align-items: start;
-        flex-direction: column;
-        gap: 14px;
-      }
-
-      nav {
-        gap: 14px;
-      }
-
-      .hero {
-        padding-top: 18px;
-      }
-
-      .hero-meta,
-      .grid,
-      .timeline,
-      .shots-grid,
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .screen {
-        min-height: 500px;
-      }
-
-      .contact-modal {
-        width: min(460px, calc(100vw - 24px));
-      }
-
+    @media (prefers-contrast: more) {
+      :root { --muted: #d5dbeb; --soft: #bec7dc; --line: rgba(255,255,255,.38); --line-strong: rgba(255,255,255,.6); }
     }
   </style>
 </head>
 <body>
-  <div class="page">
+  <a class="skip" href="#main">本文へ移動</a>
+  <div class="shell">
     <header>
-      <div class="brand">
-        <div class="logo"><img src="../resources/app_icon/app_icon.png" alt="Poker Blind Tournament icon" /></div>
-        <div>
-          <strong>Poker Blind Tournament</strong>
-          <small>Noas.inc</small>
-        </div>
-      </div>
-      <nav aria-label="ページ内リンク">
-        <a href="#features">機能</a>
-        <a href="#screenshots">画面</a>
-        <a href="#flow">使い方</a>
-        <a href="#info">アプリ情報</a>
+      <a class="brand" href="#top" aria-label="Poker MTT Note ページ上部へ">
+        <img src="../resources/app_icon/app_icon.png" alt="" />
+        <span class="brand-copy"><span class="brand-name">Poker MTT Note</span><span class="brand-mark">BLINDSCALE</span></span>
+      </a>
+      <nav aria-label="ページ内ナビゲーション">
+        <a href="#modes">2つのモード</a><a href="#screens">画面</a><a href="#features">機能</a>
+        <a class="download" href="https://apps.apple.com/app/id6760666099" target="_blank" rel="noopener">App Store</a>
       </nav>
     </header>
-
-    <section class="hero" aria-label="Hero">
-      <div class="hero-copy">
-        <div class="eyebrow">Indigo Tournament Control</div>
-        <h1>ブラインド進行を、<br /><span class="accent">静かに、正確に。</span></h1>
-        <p class="lead">『Poker Blind Tournament』は、ポーカートーナメントのブラインド構成を設定し、各プレイヤーのスタックをBB数で分かりやすく確認するための管理アプリです。ブラインド編集から進行中のスタック把握まで、必要な情報を見やすく整理できます。</p>
-        <div class="cta">
-          <a class="button primary" href="#features">主な機能を見る</a>
-          <a class="button secondary" href="#flow">進行イメージを見る</a>
-        </div>
-        <div class="hero-meta" aria-label="概要">
-          <div class="stat">
-            <strong>12+</strong>
-            <span>レベル構成をまとめて確認しやすいタイムライン表示</span>
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy reveal">
+          <p class="eyebrow">POKER TOURNAMENT COMPANION</p>
+          <h1 id="hero-title">進行も、振り返りも。<br /><span class="accent">一手の学びを残す。</span></h1>
+          <p class="lead">Poker MTT Noteは、トーナメントのブラインドとスタックを見やすく管理し、勉強会のハンド記録・共有・分析までをひとつにつなぐiPhoneアプリです。</p>
+          <div class="actions">
+            <a class="button primary" href="https://apps.apple.com/app/id6760666099" target="_blank" rel="noopener">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15.8 3.3c-.9.1-2 1-2.5 1.8-.4.7-.8 1.8-.6 2.8 1 .1 2-.5 2.7-1.3.6-.7 1-1.7.9-2.7a3 3 0 0 0-.5-.6Z"/><path d="M19.2 16.8c-.6 1.3-1.3 2.5-2.3 2.5-1 0-1.3-.6-2.5-.6s-1.6.6-2.6.6c-1 0-1.8-1.1-2.5-2.4-1.4-2.6-1.6-5.6-.6-7.2.8-1.1 2-1.8 3.2-1.8 1 0 2 .7 2.6.7.6 0 1.8-.8 3-.7.5 0 2 .2 3 1.6-2.7 1.6-2.3 5.4.5 6.5-.4.3-1 .5-1.8.8Z"/></svg>
+              App Storeで見る
+            </a>
+            <a class="button secondary" href="#screens">新しい画面を見る</a>
           </div>
-          <div class="stat">
-            <strong>1画面</strong>
-            <span>現在レベルと次レベル、卓の状況を1画面で確認</span>
-          </div>
-          <div class="stat">
-            <strong>BB表示</strong>
-            <span>プレイヤーごとのスタックをBB数で確認しやすく整理</span>
-          </div>
+          <ul class="facts" aria-label="対応情報">
+            <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>iPhone対応</li>
+            <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>8言語</li>
+            <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>勉強会への参加は無料</li>
+          </ul>
         </div>
-        <div class="support-note" id="contact" aria-label="お問い合わせ案内">
-          <strong>お問い合わせについて</strong>
-          <p>ご質問、不具合報告、改善要望などは、ページ右下の「お問い合わせ」リンクからお願いします。</p>
+        <div class="hero-visual reveal">
+          <div class="device"><img src="../resources/screenshot/app_store/ja/03_study_dashboard.png" width="1290" height="2796" alt="Poker MTT Noteの勉強会モード。プレイヤーのスタックとハンド履歴を表示している画面" /></div>
+          <div class="note" aria-hidden="true"><strong>同じWi-Fiでリアルタイム共有</strong><span>参加者はStudy Proの購入なしで接続できます</span></div>
         </div>
-      </div>
+      </section>
 
-      <div class="panel screenshot-panel" aria-label="アプリスクリーンショット">
-        <div class="phone-shell image-shell">
-          <img class="hero-screenshot" id="heroScreenshot" src="../resources/screenshot/screenshot_002.png" alt="Poker Blind Tournament の進行管理画面" />
+      <section class="section" id="modes" aria-labelledby="modes-title">
+        <div class="heading"><p class="kicker">TWO MODES</p><h2 id="modes-title">運営する日と、学ぶ日。<br />必要な道具をひとつに。</h2><p>いつものトーナメント管理はそのままに、仲間との検討や自分のプレーの振り返りを支える勉強会モードを追加しました。</p></div>
+        <div class="modes">
+          <article class="mode">
+            <div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v5c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 11v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/></svg></div>
+            <h3>通常トーナメント</h3><p>ブラインド進行とテーブルの状況を、卓のそばで素早く確認。</p>
+            <ul><li>ブラインドタイマーとレベル編集</li><li>複数テーブルのプレイヤー管理</li><li>スタックのBB換算、メモ、カラー表示</li><li>プレイヤープロファイルの再利用</li></ul>
+          </article>
+          <article class="mode study">
+            <div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 10 9-5 9 5-9 5-9-5Z"/><path d="M7 12.5v4c2.7 2 7.3 2 10 0v-4M21 10v6"/></svg></div>
+            <h3>勉強会モード</h3><p>その場のアクションを残し、一手の理由を仲間と話せる記録環境。</p>
+            <ul><li>ポジションごとのハンドアクション記録</li><li>同一Wi-Fi内でのリアルタイム共有</li><li>参加率・レイズ率・収支の分析</li><li>JSONデータとHTML学習レポートの保存</li></ul>
+          </article>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section id="screenshots">
-      <div class="section-head">
-        <h2>スクリーンショット</h2>
-        <p>大会作成、進行管理、ブラインド編集まで、主要画面をそのまま確認できるように実アプリ画像を掲載しています。</p>
-      </div>
-      <div class="shots-grid">
-        <article class="shot-card">
-          <img src="../resources/screenshot/screenshot_001.png" alt="Poker Blind Tournament の大会一覧画面" />
-        </article>
-        <article class="shot-card">
-          <img src="../resources/screenshot/screenshot_002.png" alt="Poker Blind Tournament の進行管理画面" />
-        </article>
-        <article class="shot-card">
-          <img src="../resources/screenshot/screenshot_003.png" alt="Poker Blind Tournament のブラインド編集画面" />
-        </article>
-      </div>
-    </section>
+      <section class="section" id="screens" aria-labelledby="screens-title">
+        <div class="heading"><p class="kicker">APP SCREENS</p><h2 id="screens-title">見たい情報へ、迷わず。</h2><p>通常トーナメント、勉強会、EQ計算を同じダークトーンで整理。青と緑の配色でモードを見分けやすくしています。</p></div>
+        <div class="gallery">
+          <figure><div class="shot"><img loading="lazy" src="../resources/screenshot/app_store/ja/01_menu.png" width="1290" height="2796" alt="通常トーナメントと勉強会モードを選べるトーナメント一覧" /></div><figcaption><strong>モードを選ぶ</strong>通常と勉強会を色で区別</figcaption></figure>
+          <figure><div class="shot"><img loading="lazy" src="../resources/screenshot/app_store/ja/02_tournament.png" width="1290" height="2796" alt="ブラインドと各プレイヤーのスタックを表示する通常トーナメント画面" /></div><figcaption><strong>大会を進める</strong>ブラインドとBBを一覧</figcaption></figure>
+          <figure><div class="shot"><img loading="lazy" src="../resources/screenshot/app_store/ja/03_study_dashboard.png" width="1290" height="2796" alt="勉強会モードのテーブルとハンド履歴画面" /></div><figcaption><strong>勉強会を共有</strong>卓と履歴をリアルタイムに</figcaption></figure>
+          <figure><div class="shot"><img loading="lazy" src="../resources/screenshot/app_store/ja/04_study_record.png" width="1290" height="2796" alt="勉強会モードでポジション別にアクションを記録する画面" /></div><figcaption><strong>アクションを残す</strong>ストリートごとに素早く記録</figcaption></figure>
+          <figure><div class="shot"><img loading="lazy" src="../resources/screenshot/app_store/ja/05_equity_calculator.png" width="1290" height="2796" alt="ハンドとレンジの勝率を比較するEQ計算機画面" /></div><figcaption><strong>EQを比較する</strong>ハンド対レンジにも対応</figcaption></figure>
+        </div>
+      </section>
 
-    <section id="features">
-      <div class="section-head">
-        <h2>主な機能</h2>
-        <p>既存の Noas サイトと同じく、内容はシンプルに整理しつつ、トーナメント運営で本当に見る情報を前面に置いた構成にしています。</p>
-      </div>
-      <div class="grid">
-        <article class="card">
-          <div class="icon">01</div>
-          <h3>ブラインド構成を一覧化</h3>
-          <p>レベルごとのSB・BBAを並べて確認しながら、トーナメント用のブラインド構成を整理できます。</p>
-        </article>
-        <article class="card">
-          <div class="icon">02</div>
-          <h3>スタックをBB数で表示</h3>
-          <p>プレイヤーごとの持ち点をブラインドに対するBB数で確認でき、卓の状況把握を助けます。</p>
-        </article>
-        <article class="card">
-          <div class="icon">03</div>
-          <h3>柔軟なレベル設定</h3>
-          <p>イベントルールに合わせて、ブラインドレベルや数値構成を調整しやすい設計です。</p>
-        </article>
-        <article class="card">
-          <div class="icon">04</div>
-          <h3>藍色ベースの落ち着いたUI</h3>
-          <p>長時間の運営でも視認しやすいよう、強すぎないコントラストと少し藍色寄りのトーンでまとめています。</p>
-        </article>
-        <article class="card">
-          <div class="icon">05</div>
-          <h3>モバイルで扱いやすい</h3>
-          <p>卓のそばで片手確認しやすい縦長レイアウトを前提に、情報ブロックをコンパクトに区切っています。</p>
-        </article>
-        <article class="card">
-          <div class="icon">06</div>
-          <h3>状況把握を高速化</h3>
-          <p>現在のブラインドと各プレイヤーのBB数をまとめて確認でき、テーブル状況の判断をしやすくします。</p>
-        </article>
-      </div>
-    </section>
+      <section class="section" id="features" aria-labelledby="features-title">
+        <div class="heading"><p class="kicker">BUILT FOR THE TABLE</p><h2 id="features-title">その場で速く、<br />あとから深く。</h2><p>記録中の操作量を抑えながら、終わったあとに検討できる材料を残します。</p></div>
+        <div class="features">
+          <article class="feature"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2M9 2h6"/></svg></div><h3>ブラインド進行を一画面で</h3><p>現在レベル、次のレベル、残り時間と各席のスタックをまとめて確認できます。</p></article>
+          <article class="feature green"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4"/><circle cx="12" cy="7" r="3"/><path d="M4 8a3 3 0 0 0-2 3v3M20 8a3 3 0 0 1 2 3v3"/></svg></div><h3>仲間と同じ卓を見る</h3><p>同じWi-Fi内の端末へ学習状況を共有。ホストの更新を参加者もリアルタイムで確認できます。</p></article>
+          <article class="feature green"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V9M10 19V5M16 19v-7M22 19V3"/></svg></div><h3>プレーの傾向を見つける</h3><p>参加率、レイズ率、収支をプレイヤー別・ポジション別に集計し、振り返るポイントを探せます。</p></article>
+          <article class="feature gold"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="7" height="14" rx="2"/><rect x="14" y="5" width="7" height="14" rx="2"/><path d="M6 9h1M17 15h1"/></svg></div><h3>ハンドとレンジのEQ計算</h3><p>カード対カードだけでなく、ハンド対レンジも比較。結果は選択内容に合わせて自動で更新されます。</p></article>
+          <article class="feature"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h10l4 4v14H5V3Z"/><path d="M15 3v5h4M8 12h8M8 16h6"/></svg></div><h3>学びを持ち帰る</h3><p>学習データはJSONで保存でき、HTML学習レポートはブラウザで読み返せます。</p></article>
+          <article class="feature"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg></div><h3>8言語をアプリ内に収録</h3><p>日本語、英語、ドイツ語、スペイン語、フランス語、韓国語、ポルトガル語、繁体字中国語に対応します。</p></article>
+        </div>
+      </section>
 
-    <section id="flow">
-      <div class="section-head">
-        <h2>使い方の流れ</h2>
-        <p>ブラインド設定から、進行中のスタック確認までを分かりやすく追える構成です。</p>
-      </div>
-      <div class="timeline">
-        <article class="timeline-item" data-step="01">
-          <h3>レベルを登録</h3>
-          <p>レベルごとのブラインド値を入力して、その日の大会で使うブラインド構成を作成します。</p>
-        </article>
-        <article class="timeline-item" data-step="02">
-          <h3>進行中は現在ブラインドを確認</h3>
-          <p>現在のブラインド設定を基準に、各プレイヤーのスタック状況を見やすく確認できます。</p>
-        </article>
-        <article class="timeline-item" data-step="03">
-          <h3>スタックをBB数で把握</h3>
-          <p>持ち点をBB換算で確認しながら、プレイヤーごとのスタック感を直感的に把握できます。</p>
-        </article>
-      </div>
-    </section>
+      <section class="section" aria-labelledby="pro-title">
+        <div class="pro">
+          <div><span class="badge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8L12 3Z"/></svg>STUDY PRO</span><h2 id="pro-title">あの一点を、<br />学びに。</h2><p>勉強会の作成、ホストとしてのWi-Fi共有、分析・出力、過去データの読み込みを使える買い切り機能です。ストアに表示される現在価格で購入できます。</p><p class="free">ハンドの記録と勉強会への参加は、無料で利用できます。</p></div>
+          <ul class="checks">
+            <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>仲間と、一手の理由を話すための共有</li>
+            <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>自分のプレーの癖を見つける分析</li>
+            <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>学びをあとから振り返るレポート</li>
+            <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>過去の記録でもう一度学ぶJSON読込</li>
+          </ul>
+        </div>
+      </section>
 
-    <section id="info">
-      <div class="section-head">
-        <h2>アプリ情報</h2>
-        <p>他プロダクトと揃うカードレイアウトで、必要な基本情報を簡潔に配置しています。</p>
-      </div>
-      <div class="info-grid">
-        <article class="info-card">
-          <span>Category</span>
-          <h3>ゲーム / 運営補助</h3>
-          <p>ポーカートーナメントの進行管理向けユーティリティ。</p>
-        </article>
-        <article class="info-card">
-          <span>Language</span>
-          <h3>日本語 / 英語</h3>
-          <p>会場運営でも扱いやすい、シンプルな二言語想定の表示構成。</p>
-        </article>
-        <article class="info-card">
-          <span>Devices</span>
-          <h3>iPhone / iPad</h3>
-          <p>縦持ち中心のモバイル運用を意識した情報密度です。</p>
-        </article>
-        <article class="info-card">
-          <span>Copyright</span>
-          <h3>© 2026 Noas.inc</h3>
-          <p>製品サイト用の1ページ構成として整理しています。</p>
-        </article>
-      </div>
-    </section>
+      <section class="privacy" aria-labelledby="privacy-title">
+        <div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/><rect x="9" y="10" width="6" height="5" rx="1"/><path d="M10 10V8.8a2 2 0 0 1 4 0V10"/></svg></div>
+        <div><h2 id="privacy-title">勉強会の共有は、ローカルWi-Fi内で完結</h2><p>共有中の学習データを外部サーバーへ送信しません。参加パスワードと接続先を知る同じWi-Fi内の端末だけが参加できます。</p></div>
+      </section>
 
+      <section class="final" aria-labelledby="final-title">
+        <h2 id="final-title">次のトーナメントに、<br />学びが残る一席を。</h2>
+        <p>大会の運営から、仲間との勉強会、ひとりでの振り返りまで。Poker MTT Noteを卓のそばに。</p>
+        <div class="actions"><a class="button primary" href="https://apps.apple.com/app/id6760666099" target="_blank" rel="noopener">App Storeで見る</a></div>
+      </section>
+    </main>
     <footer>
-      <div>© 2026 Poker Blind Tournament / Noas.inc</div>
-      <div class="footer-actions">
-        <button class="contact-trigger" id="contactTrigger" type="button" aria-haspopup="dialog" aria-controls="contactModal" aria-expanded="false">お問い合わせ</button>
+      <div>© 2026 Poker MTT Note / Noas.inc</div>
+      <div class="footer-links">
+        <a href="mailto:support@noasproject.com?subject=Poker%20MTT%20Note%E3%81%AE%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B">お問い合わせ</a>
         <a href="https://noasproject.github.io/products/poker-blind-tournament/privacy-policy/">プライバシーポリシー</a>
       </div>
     </footer>
   </div>
-
-  <div class="contact-backdrop" id="contactBackdrop" hidden></div>
-
-  <div class="contact-modal" id="contactModal" role="dialog" aria-modal="false" aria-labelledby="contactModalTitle" hidden>
-    <h2 id="contactModalTitle">お問い合わせ</h2>
-    <p>入力内容をもとに、サポート用メールを作成します。ご質問、不具合報告、改善要望などをお送りください。</p>
-    <form class="contact-form" id="contactForm">
-      <div class="form-field">
-        <label for="contactEmail">メールアドレス</label>
-        <input id="contactEmail" name="email" type="email" placeholder="your-email@example.com" required />
-      </div>
-      <div class="form-field">
-        <label for="contactSubject">件名</label>
-        <input id="contactSubject" name="subject" type="text" placeholder="お問い合わせ件名" required />
-      </div>
-      <div class="form-field">
-        <label for="contactMessage">内容</label>
-        <textarea id="contactMessage" name="message" placeholder="お問い合わせ内容をご記入ください" required></textarea>
-      </div>
-    </form>
-    <div class="modal-actions">
-      <button class="modal-button primary" id="contactSubmit" type="submit" form="contactForm">メールを送る</button>
-      <button class="modal-button secondary" id="contactModalClose" type="button">閉じる</button>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      var trigger = document.getElementById("contactTrigger");
-      var backdrop = document.getElementById("contactBackdrop");
-      var modal = document.getElementById("contactModal");
-      var close = document.getElementById("contactModalClose");
-      var form = document.getElementById("contactForm");
-      var email = document.getElementById("contactEmail");
-      var subject = document.getElementById("contactSubject");
-      var message = document.getElementById("contactMessage");
-      var heroScreenshot = document.getElementById("heroScreenshot");
-      var heroShots = [
-        {
-          src: "../resources/screenshot/screenshot_001.png",
-          alt: "Poker Blind Tournament の大会一覧画面"
-        },
-        {
-          src: "../resources/screenshot/screenshot_002.png",
-          alt: "Poker Blind Tournament の進行管理画面"
-        },
-        {
-          src: "../resources/screenshot/screenshot_003.png",
-          alt: "Poker Blind Tournament のブラインド編集画面"
-        }
-      ];
-      var heroIndex = 1;
-
-      function setOpen(isOpen) {
-        modal.hidden = !isOpen;
-        backdrop.hidden = !isOpen;
-        trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
-        if (isOpen) {
-          window.setTimeout(function () {
-            email.focus();
-          }, 0);
-        }
-      }
-
-      trigger.addEventListener("click", function () {
-        setOpen(modal.hidden);
-      });
-
-      close.addEventListener("click", function () {
-        setOpen(false);
-      });
-
-      backdrop.addEventListener("click", function () {
-        setOpen(false);
-      });
-
-      document.addEventListener("click", function (event) {
-        if (modal.hidden) return;
-        if (modal.contains(event.target) || trigger.contains(event.target)) return;
-        setOpen(false);
-      });
-
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          setOpen(false);
-        }
-      });
-
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        if (!form.reportValidity()) return;
-
-        var body = [
-          "送信者メールアドレス: " + email.value,
-          "",
-          message.value
-        ].join("\n");
-
-        var href = "mailto:support@noasproject.com?subject=" +
-          encodeURIComponent(subject.value) +
-          "&body=" +
-          encodeURIComponent(body);
-
-        window.location.href = href;
-      });
-
-      if (heroScreenshot) {
-        window.setInterval(function () {
-          heroScreenshot.classList.add("is-fading");
-
-          window.setTimeout(function () {
-            heroIndex = (heroIndex + 1) % heroShots.length;
-            heroScreenshot.src = heroShots[heroIndex].src;
-            heroScreenshot.alt = heroShots[heroIndex].alt;
-            heroScreenshot.classList.remove("is-fading");
-          }, 220);
-        }, 3500);
-      }
-    }());
-  </script>
 </body>
 </html>
