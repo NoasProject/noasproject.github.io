@@ -8,7 +8,11 @@
     "message_key": "updateUnsupportedVersionMessage",
     "offline_access": {
       "access_hours": 50,
-      "reminder_hours": [24, 10, 3]
+      "reminder_hours": [
+        24,
+        10,
+        3
+      ]
     },
     "products": [
       {
@@ -31,7 +35,11 @@
     "message_key": "updateAvailableMessage",
     "offline_access": {
       "access_hours": 50,
-      "reminder_hours": [24, 10, 3]
+      "reminder_hours": [
+        24,
+        10,
+        3
+      ]
     },
     "products": [
       {
