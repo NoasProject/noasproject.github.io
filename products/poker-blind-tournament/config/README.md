@@ -18,7 +18,8 @@ GitHub Pagesは `.github/workflows/pages.yml` で公開します。Pull Request�
 - 正規表現は `^2\.0\.0$` のように3桁の数値バージョンを完全一致させる形式、または各桁に `[0-9]+` を使う形式のみ許可します。例: `^2\.0\.[0-9]+$`。任意の正規表現・部分一致・複雑な反復は許可しません。
 - iOSのストアURLは `https://apps.apple.com/app/id6760666099`、Androidは登録済みの製品URLに限定します。
 - `message` は日本語 `ja` と英語 `en` の空でない文字列が必須。他言語の追加は可能です。
-- v2は両OSの `study_pro_product_id` と真偽値の `study_pro_purchase_enabled` が必須。製品IDは `poker.tournament.blind.floor.study_pro`・空文字・nullのみ許可します。空文字/nullによる停止と、フラグfalseによる停止は正当な設定として検証を通します。
+- v2の利用猶予は `offline_access.access_hours`、通知時刻は `offline_access.reminder_hours` で設定します。
+- v2の課金商品は `products` 配列で管理します。アプリ内ID `study_pro`、現在購入する `store_product_id`、購入済みとして受け入れる `accepted_product_ids`、真偽値の `purchase_enabled`、セール予定の `promotions` が必須です。空文字/nullの商品IDまたはfalseによる停止は正当な設定として検証を通します。
 - スキーマや製品IDを変更する場合は、アプリ側対応と検証スクリプト・テストの更新を同時に行います。
 
 特定のリリースバージョンの許可確認:
@@ -31,14 +32,16 @@ TestFlightのビルド・アップロードはアプリリポジトリの `scrip
 
 ## Study Proの期間限定セール
 
-v2 Configの`ios`と`android`へ同じ`study_pro_promotion`を設定します。時刻はUTCのUnix timestamp（秒）です。
+v2 Configの`ios`と`android`で、`study_pro`商品の`promotions`へ同じセール予定を設定します。時刻はUTCのUnix timestamp（秒）です。
 
 ```json
-"study_pro_promotion": {
-  "percent_off": 30,
-  "starts_at": 1788238800,
-  "ends_at": 1790780400
-}
+"promotions": [
+  {
+    "percent_off": 30,
+    "starts_at": 1788238800,
+    "ends_at": 1790780400
+  }
+]
 ```
 
-期間は`starts_at`以上、`ends_at`未満です。セールを表示しない場合は`null`を設定します。ストアの価格予約も同じ開始・終了時刻に設定してください。アプリは境界時刻にストアの商品情報を再取得します。
+期間は`starts_at`以上、`ends_at`未満です。セールを表示しない場合は空配列を設定します。複数件は開始日時順に並べ、期間を重複させません。ストアの価格予約も同じ開始・終了時刻に設定してください。アプリは各境界時刻にストアの商品情報を再取得します。

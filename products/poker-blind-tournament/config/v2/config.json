@@ -6,14 +6,21 @@
     "force_update": true,
     "store_url": "https://apps.apple.com/app/id6760666099",
     "message_key": "updateUnsupportedVersionMessage",
-    "offline_access_hours": 50,
-    "connection_reminder_hours": [24, 10, 3],
-    "study_pro_product_id": "poker.tournament.blind.floor.study_pro",
-    "study_pro_entitlement_product_ids": [
-      "poker.tournament.blind.floor.study_pro"
-    ],
-    "study_pro_promotion": null,
-    "study_pro_purchase_enabled": true
+    "offline_access": {
+      "access_hours": 50,
+      "reminder_hours": [24, 10, 3]
+    },
+    "products": [
+      {
+        "id": "study_pro",
+        "store_product_id": "poker.tournament.blind.floor.study_pro",
+        "accepted_product_ids": [
+          "poker.tournament.blind.floor.study_pro"
+        ],
+        "purchase_enabled": true,
+        "promotions": []
+      }
+    ]
   },
   "android": {
     "allowed_versions": [
@@ -22,13 +29,20 @@
     "force_update": false,
     "store_url": "https://play.google.com/store/apps/details?id=noas.poker.tournament.blind.floor",
     "message_key": "updateAvailableMessage",
-    "offline_access_hours": 50,
-    "connection_reminder_hours": [24, 10, 3],
-    "study_pro_product_id": "poker.tournament.blind.floor.study_pro",
-    "study_pro_entitlement_product_ids": [
-      "poker.tournament.blind.floor.study_pro"
-    ],
-    "study_pro_promotion": null,
-    "study_pro_purchase_enabled": true
+    "offline_access": {
+      "access_hours": 50,
+      "reminder_hours": [24, 10, 3]
+    },
+    "products": [
+      {
+        "id": "study_pro",
+        "store_product_id": "poker.tournament.blind.floor.study_pro",
+        "accepted_product_ids": [
+          "poker.tournament.blind.floor.study_pro"
+        ],
+        "purchase_enabled": true,
+        "promotions": []
+      }
+    ]
   }
 }

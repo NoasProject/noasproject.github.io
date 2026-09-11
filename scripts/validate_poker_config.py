@@ -36,11 +36,8 @@ def validate(config, *, v2):
         if v2:
             required = {
                 'allowed_versions', 'force_update', 'store_url', 'message_key',
-                'offline_access_hours', 'connection_reminder_hours',
-                'study_pro_product_id', 'study_pro_entitlement_product_ids',
-                'study_pro_purchase_enabled',
+                'offline_access', 'products',
             }
-            optional = {'study_pro_promotion'}
         if (not isinstance(settings, dict) or not required <= set(settings) or
                 not set(settings) <= required | optional):
             raise ValueError(
@@ -67,50 +64,90 @@ def validate(config, *, v2):
         if v2:
             if settings['message_key'] not in MESSAGE_KEYS:
                 raise ValueError(f'{os}.message_key: unknown bundled translation key')
-            offline_hours = settings['offline_access_hours']
-            reminder_hours = settings['connection_reminder_hours']
+            offline_access = settings['offline_access']
+            if not isinstance(offline_access, dict) or set(offline_access) != {
+                    'access_hours', 'reminder_hours'}:
+                raise ValueError(
+                    f'{os}.offline_access: access_hours and reminder_hours required'
+                )
+            offline_hours = offline_access['access_hours']
+            reminder_hours = offline_access['reminder_hours']
             if type(offline_hours) is not int or not 1 <= offline_hours <= 720:
-                raise ValueError(f'{os}.offline_access_hours: integer from 1 through 720 required')
+                raise ValueError(f'{os}.offline_access.access_hours: integer from 1 through 720 required')
             if (not isinstance(reminder_hours, list) or len(reminder_hours) > 10 or
                     any(type(value) is not int for value in reminder_hours) or
                     len(set(reminder_hours)) != len(reminder_hours) or
                     any(value < 1 or value >= offline_hours for value in reminder_hours) or
                     any(left <= right for left, right in zip(reminder_hours, reminder_hours[1:]))):
                 raise ValueError(
-                    f'{os}.connection_reminder_hours: up to 10 unique descending integers '
-                    'between 1 and offline_access_hours - 1 required'
+                    f'{os}.offline_access.reminder_hours: up to 10 unique descending integers '
+                    'between 1 and access_hours - 1 required'
                 )
-            if type(settings['study_pro_purchase_enabled']) is not bool:
-                raise ValueError(f'{os}.study_pro_purchase_enabled: boolean required')
-            product_id = settings['study_pro_product_id']
-            if product_id not in ('', None) and (
-                    not isinstance(product_id, str) or not PRODUCT_ID_PATTERN.fullmatch(product_id)):
-                raise ValueError(f'{os}.study_pro_product_id: invalid product ID')
-            entitlement_ids = settings['study_pro_entitlement_product_ids']
-            if (not isinstance(entitlement_ids, list) or not entitlement_ids or
-                    any(not isinstance(value, str) or not PRODUCT_ID_PATTERN.fullmatch(value)
-                        for value in entitlement_ids) or
-                    len(set(entitlement_ids)) != len(entitlement_ids)):
-                raise ValueError(f'{os}.study_pro_entitlement_product_ids: unique valid product IDs required')
-            if product_id and product_id not in entitlement_ids:
-                raise ValueError(f'{os}.study_pro_entitlement_product_ids: must include active product ID')
-            promotion = settings.get('study_pro_promotion')
-            if promotion is not None:
-                if not isinstance(promotion, dict) or set(promotion) != {
-                        'percent_off', 'starts_at', 'ends_at'}:
+            products = settings['products']
+            if not isinstance(products, list) or not products or len(products) > 20:
+                raise ValueError(f'{os}.products: 1 through 20 products required')
+            internal_ids = []
+            for index, product in enumerate(products):
+                prefix = f'{os}.products[{index}]'
+                if not isinstance(product, dict) or set(product) != {
+                        'id', 'store_product_id', 'accepted_product_ids',
+                        'purchase_enabled', 'promotions'}:
+                    raise ValueError(f'{prefix}: invalid product keys')
+                internal_id = product['id']
+                if (not isinstance(internal_id, str) or
+                        not PRODUCT_ID_PATTERN.fullmatch(internal_id)):
+                    raise ValueError(f'{prefix}.id: invalid internal product ID')
+                internal_ids.append(internal_id)
+                if type(product['purchase_enabled']) is not bool:
+                    raise ValueError(f'{prefix}.purchase_enabled: boolean required')
+                store_product_id = product['store_product_id']
+                if store_product_id not in ('', None) and (
+                        not isinstance(store_product_id, str) or
+                        not PRODUCT_ID_PATTERN.fullmatch(store_product_id)):
+                    raise ValueError(f'{prefix}.store_product_id: invalid store product ID')
+                accepted_ids = product['accepted_product_ids']
+                if (not isinstance(accepted_ids, list) or not accepted_ids or
+                        any(not isinstance(value, str) or
+                            not PRODUCT_ID_PATTERN.fullmatch(value)
+                            for value in accepted_ids) or
+                        len(set(accepted_ids)) != len(accepted_ids)):
                     raise ValueError(
-                        f'{os}.study_pro_promotion: percent_off, starts_at and ends_at required'
+                        f'{prefix}.accepted_product_ids: unique valid product IDs required'
                     )
-                percent_off = promotion['percent_off']
-                starts_at = promotion['starts_at']
-                ends_at = promotion['ends_at']
-                if type(percent_off) is not int or not 1 <= percent_off <= 99:
-                    raise ValueError(f'{os}.study_pro_promotion.percent_off: integer from 1 through 99 required')
-                if (type(starts_at) is not int or type(ends_at) is not int or
-                        not 0 <= starts_at < ends_at <= 253402300799):
+                if store_product_id and store_product_id not in accepted_ids:
                     raise ValueError(
-                        f'{os}.study_pro_promotion: UTC Unix-second timestamps with starts_at < ends_at required'
+                        f'{prefix}.accepted_product_ids: must include store_product_id'
                     )
+                promotions = product['promotions']
+                if not isinstance(promotions, list) or len(promotions) > 20:
+                    raise ValueError(f'{prefix}.promotions: up to 20 promotions required')
+                previous_end = None
+                for promotion_index, promotion in enumerate(promotions):
+                    promotion_prefix = f'{prefix}.promotions[{promotion_index}]'
+                    if not isinstance(promotion, dict) or set(promotion) != {
+                            'percent_off', 'starts_at', 'ends_at'}:
+                        raise ValueError(f'{promotion_prefix}: invalid promotion keys')
+                    percent_off = promotion['percent_off']
+                    starts_at = promotion['starts_at']
+                    ends_at = promotion['ends_at']
+                    if type(percent_off) is not int or not 1 <= percent_off <= 99:
+                        raise ValueError(
+                            f'{promotion_prefix}.percent_off: integer from 1 through 99 required'
+                        )
+                    if (type(starts_at) is not int or type(ends_at) is not int or
+                            not 0 <= starts_at < ends_at <= 253402300799):
+                        raise ValueError(
+                            f'{promotion_prefix}: UTC Unix-second timestamps with starts_at < ends_at required'
+                        )
+                    if previous_end is not None and starts_at < previous_end:
+                        raise ValueError(
+                            f'{prefix}.promotions: must be ordered without overlaps'
+                        )
+                    previous_end = ends_at
+            if len(set(internal_ids)) != len(internal_ids):
+                raise ValueError(f'{os}.products: product IDs must be unique')
+            if 'study_pro' not in internal_ids:
+                raise ValueError(f'{os}.products: study_pro is required')
         else:
             messages = settings['message']
             if not isinstance(messages, dict) or not {'ja', 'en'} <= set(messages):
@@ -118,8 +155,19 @@ def validate(config, *, v2):
             if any(not isinstance(k, str) or not k.strip() or not isinstance(v, str) or not v.strip()
                    for k, v in messages.items()):
                 raise ValueError(f'{os}.message: nonempty language keys and texts required')
-    if v2 and config['ios'].get('study_pro_promotion') != config['android'].get('study_pro_promotion'):
-        raise ValueError('study_pro_promotion: ios and android must use the same promotion')
+    if v2:
+        products_by_os = {
+            os: {product['id']: product for product in config[os]['products']}
+            for os in ('ios', 'android')
+        }
+        if set(products_by_os['ios']) != set(products_by_os['android']):
+            raise ValueError('products: ios and android must contain the same product IDs')
+        for product_id in products_by_os['ios']:
+            if (products_by_os['ios'][product_id]['promotions'] !=
+                    products_by_os['android'][product_id]['promotions']):
+                raise ValueError(
+                    f'products.{product_id}.promotions: ios and android must match'
+                )
 
 
 def allows(config, platform, version):
