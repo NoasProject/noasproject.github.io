@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#080d1c" />
   <title>Poker MTT Note | トーナメント運営と勉強会の記録をひとつに</title>
-  <meta name="description" content="Poker MTT Noteは、ブラインドタイマー、スタック管理、勉強会のハンド記録・分析・同一Wi-Fi共有、EQ計算をひとつにまとめたiPhoneアプリです。" />
+  <meta name="description" content="Poker MTT Noteは、ブラインドタイマー、スタック管理、勉強会のハンド記録・分析・同一Wi-Fi共有、EQ計算をひとつにまとめたiPhoneアプリです" />
   <meta property="og:title" content="Poker MTT Note" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ja_JP" />
-  <meta property="og:description" content="トーナメントを進める日も、一手を深く振り返る日も。運営と学びをひとつにまとめたポーカーMTTノート。" />
+  <meta property="og:description" content="トーナメントを進める日も、一手を深く振り返る日も、運営と学びをひとつにまとめたポーカーMTTノート" />
   <meta property="og:image" content="https://noasproject.github.io/products/poker-blind-tournament/resources/screenshot/app_store/ja/01_menu.png" />
   <link rel="canonical" href="https://noasproject.github.io/products/poker-blind-tournament/web-site/" />
   <link rel="icon" type="image/png" href="../resources/app_icon/app_icon.png" />
@@ -123,12 +123,17 @@
       background: #07101f; box-shadow: var(--shadow),0 0 0 8px rgba(255,255,255,.025); transform: rotate(1.4deg);
     }
     .note {
-      position: absolute; left: -76px; bottom: 11%; max-width: 210px; padding: 14px 16px;
-      border: 1px solid rgba(88,214,164,.3); border-radius: 18px; background: rgba(10,35,35,.86);
-      box-shadow: 0 18px 50px rgba(0,0,0,.32); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 12px; align-items: center;
+      margin: 0 4px 18px; padding: 14px 16px; border: 1px solid rgba(88,214,164,.24);
+      border-radius: 18px; background: rgba(14,45,42,.72);
     }
-    .note strong { display: block; color: #dcfff1; font-size: 13px; }
-    .note span { display: block; margin-top: 3px; color: #9ccab8; font-size: 11px; line-height: 1.5; }
+    .note-icon {
+      display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px;
+      color: #9ce7c9; background: rgba(88,214,164,.12);
+    }
+    .note-icon svg { width: 19px; height: 19px; }
+    .note strong { display: block; color: #dcfff1; font-size: 13px; line-height: 1.45; }
+    .note span { display: block; margin-top: 3px; color: #b1d8c9; font-size: 11px; line-height: 1.55; }
     .section { padding: 88px 0; }
     .heading { max-width: 750px; margin-bottom: 34px; }
     .kicker { margin: 0 0 10px; color: var(--blue); font-size: 12px; font-weight: 800; letter-spacing: .14em; }
@@ -215,7 +220,7 @@
     @keyframes reveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 1040px) {
       .hero { grid-template-columns: minmax(0,1fr) 340px; gap: 44px; }
-      .note { left: -40px; } .gallery { grid-template-columns: repeat(3,minmax(0,1fr)); }
+      .gallery { grid-template-columns: repeat(3,minmax(0,1fr)); }
       .features { grid-template-columns: repeat(2,minmax(0,1fr)); }
     }
     @media (max-width: 780px) {
@@ -225,7 +230,7 @@
       .hero { grid-template-columns: 1fr; min-height: 0; padding: 58px 0 64px; }
       .hero-copy { text-align: center; } .eyebrow,.actions,.facts { justify-content: center; }
       .lead { margin-inline: auto; } .hero-visual { width: min(78vw,380px); margin: 0 auto; }
-      .note { left: -24px; } .modes,.pro { grid-template-columns: 1fr; } .mode { min-height: 0; }
+      .modes,.pro { grid-template-columns: 1fr; } .mode { min-height: 0; }
       .gallery { grid-template-columns: repeat(2,minmax(0,1fr)); } .section { padding: 68px 0; }
     }
     @media (max-width: 520px) {
@@ -234,7 +239,7 @@
       .brand-name { max-width: 128px; font-size: 13px; } .brand-mark { font-size: 9px; }
       h1 { font-size: clamp(2.45rem,13vw,3.7rem); } .lead { font-size: 15px; }
       .actions { display: grid; } .button { width: 100%; } .facts { display: grid; text-align: left; }
-      .hero-visual { width: min(84vw,360px); } .note { left: -10px; bottom: 8%; max-width: 184px; }
+      .hero-visual { width: min(84vw,360px); }
       .gallery { gap: 10px; } .shot { border-radius: 17px; } figcaption { padding-top: 9px; }
       .features { grid-template-columns: 1fr; } .feature { min-height: 0; }
       .privacy { grid-template-columns: 1fr; } footer { align-items: flex-start; flex-direction: column; }
@@ -245,7 +250,7 @@
       .shot:hover,.button:active { transform: none; }
     }
     @media (prefers-reduced-transparency: reduce) {
-      header,.feature,.note { background: var(--solid); backdrop-filter: none; -webkit-backdrop-filter: none; }
+      header,.feature { background: var(--solid); backdrop-filter: none; -webkit-backdrop-filter: none; }
     }
     @media (prefers-contrast: more) {
       :root { --muted: #d5dbeb; --soft: #bec7dc; --line: rgba(255,255,255,.38); --line-strong: rgba(255,255,255,.6); }
@@ -269,8 +274,8 @@
       <section class="hero" id="top" aria-labelledby="hero-title">
         <div class="hero-copy reveal">
           <p class="eyebrow">POKER TOURNAMENT COMPANION</p>
-          <h1 id="hero-title">進行も、振り返りも。<br /><span class="accent">一手の学びを残す。</span></h1>
-          <p class="lead">Poker MTT Noteは、トーナメントのブラインドとスタックを見やすく管理し、勉強会のハンド記録・共有・分析までをひとつにつなぐiPhoneアプリです。</p>
+          <h1 id="hero-title">進行も、振り返りも<br /><span class="accent">一手の学びを残す</span></h1>
+          <p class="lead">Poker MTT Noteは、トーナメントのブラインドとスタックを見やすく管理し、勉強会のハンド記録・共有・分析までをひとつにつなぐiPhoneアプリです</p>
           <div class="actions">
             <a class="button primary" href="https://apps.apple.com/app/id6760666099" target="_blank" rel="noopener">
               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15.8 3.3c-.9.1-2 1-2.5 1.8-.4.7-.8 1.8-.6 2.8 1 .1 2-.5 2.7-1.3.6-.7 1-1.7.9-2.7a3 3 0 0 0-.5-.6Z"/><path d="M19.2 16.8c-.6 1.3-1.3 2.5-2.3 2.5-1 0-1.3-.6-2.5-.6s-1.6.6-2.6.6c-1 0-1.8-1.1-2.5-2.4-1.4-2.6-1.6-5.6-.6-7.2.8-1.1 2-1.8 3.2-1.8 1 0 2 .7 2.6.7.6 0 1.8-.8 3-.7.5 0 2 .2 3 1.6-2.7 1.6-2.3 5.4.5 6.5-.4.3-1 .5-1.8.8Z"/></svg>
@@ -285,29 +290,32 @@
           </ul>
         </div>
         <div class="hero-visual reveal">
-          <div class="device"><img src="../resources/screenshot/app_store/ja/03_study_dashboard.png" width="1290" height="2796" alt="Poker MTT Noteの勉強会モード。プレイヤーのスタックとハンド履歴を表示している画面" /></div>
-          <div class="note" aria-hidden="true"><strong>同じWi-Fiでリアルタイム共有</strong><span>参加者はStudy Proの購入なしで接続できます</span></div>
+          <div class="note">
+            <div class="note-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1" fill="currentColor" stroke="none"/></svg></div>
+            <div><strong>同じWi-Fiでリアルタイム共有</strong><span>参加者はStudy Proの購入なしで接続できます</span></div>
+          </div>
+          <div class="device"><img src="../resources/screenshot/app_store/ja/03_study_dashboard.png" width="1290" height="2796" alt="Poker MTT Noteの勉強会モードでプレイヤーのスタックとハンド履歴を表示している画面" /></div>
         </div>
       </section>
 
       <section class="section" id="modes" aria-labelledby="modes-title">
-        <div class="heading"><p class="kicker">TWO MODES</p><h2 id="modes-title">運営する日と、学ぶ日。<br />必要な道具をひとつに。</h2><p>いつものトーナメント管理はそのままに、仲間との検討や自分のプレーの振り返りを支える勉強会モードを追加しました。</p></div>
+        <div class="heading"><p class="kicker">TWO MODES</p><h2 id="modes-title">運営する日と、学ぶ日<br />必要な道具をひとつに</h2><p>いつものトーナメント管理はそのままに、仲間との検討や自分のプレーの振り返りを支える勉強会モードを追加しました</p></div>
         <div class="modes">
           <article class="mode">
             <div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v5c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 11v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/></svg></div>
-            <h3>通常トーナメント</h3><p>ブラインド進行とテーブルの状況を、卓のそばで素早く確認。</p>
+            <h3>通常トーナメント</h3><p>ブラインド進行とテーブルの状況を、卓のそばで素早く確認</p>
             <ul><li>ブラインドタイマーとレベル編集</li><li>複数テーブルのプレイヤー管理</li><li>スタックのBB換算、メモ、カラー表示</li><li>プレイヤープロファイルの再利用</li></ul>
           </article>
           <article class="mode study">
             <div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 10 9-5 9 5-9 5-9-5Z"/><path d="M7 12.5v4c2.7 2 7.3 2 10 0v-4M21 10v6"/></svg></div>
-            <h3>勉強会モード</h3><p>その場のアクションを残し、一手の理由を仲間と話せる記録環境。</p>
+            <h3>勉強会モード</h3><p>その場のアクションを残し、一手の理由を仲間と話せる記録環境</p>
             <ul><li>ポジションごとのハンドアクション記録</li><li>同一Wi-Fi内でのリアルタイム共有</li><li>参加率・レイズ率・収支の分析</li><li>JSONデータとHTML学習レポートの保存</li></ul>
           </article>
         </div>
       </section>
 
       <section class="section" id="screens" aria-labelledby="screens-title">
-        <div class="heading"><p class="kicker">APP SCREENS</p><h2 id="screens-title">見たい情報へ、迷わず。</h2><p>通常トーナメント、勉強会、EQ計算を同じダークトーンで整理。青と緑の配色でモードを見分けやすくしています。</p></div>
+        <div class="heading"><p class="kicker">APP SCREENS</p><h2 id="screens-title">見たい情報へ、迷わず</h2><p>通常トーナメント、勉強会、EQ計算を同じダークトーンで整理し、青と緑の配色でモードを見分けやすくしています</p></div>
         <div class="gallery">
           <figure><div class="shot"><img loading="lazy" src="../resources/screenshot/app_store/ja/01_menu.png" width="1290" height="2796" alt="通常トーナメントと勉強会モードを選べるトーナメント一覧" /></div><figcaption><strong>モードを選ぶ</strong>通常と勉強会を色で区別</figcaption></figure>
           <figure><div class="shot"><img loading="lazy" src="../resources/screenshot/app_store/ja/02_tournament.png" width="1290" height="2796" alt="ブラインドと各プレイヤーのスタックを表示する通常トーナメント画面" /></div><figcaption><strong>大会を進める</strong>ブラインドとBBを一覧</figcaption></figure>
@@ -318,20 +326,20 @@
       </section>
 
       <section class="section" id="features" aria-labelledby="features-title">
-        <div class="heading"><p class="kicker">BUILT FOR THE TABLE</p><h2 id="features-title">その場で速く、<br />あとから深く。</h2><p>記録中の操作量を抑えながら、終わったあとに検討できる材料を残します。</p></div>
+        <div class="heading"><p class="kicker">BUILT FOR THE TABLE</p><h2 id="features-title">その場で速く、<br />あとから深く</h2><p>記録中の操作量を抑えながら、終わったあとに検討できる材料を残します</p></div>
         <div class="features">
-          <article class="feature"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2M9 2h6"/></svg></div><h3>ブラインド進行を一画面で</h3><p>現在レベル、次のレベル、残り時間と各席のスタックをまとめて確認できます。</p></article>
-          <article class="feature green"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4"/><circle cx="12" cy="7" r="3"/><path d="M4 8a3 3 0 0 0-2 3v3M20 8a3 3 0 0 1 2 3v3"/></svg></div><h3>仲間と同じ卓を見る</h3><p>同じWi-Fi内の端末へ学習状況を共有。ホストの更新を参加者もリアルタイムで確認できます。</p></article>
-          <article class="feature green"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V9M10 19V5M16 19v-7M22 19V3"/></svg></div><h3>プレーの傾向を見つける</h3><p>参加率、レイズ率、収支をプレイヤー別・ポジション別に集計し、振り返るポイントを探せます。</p></article>
-          <article class="feature gold"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="7" height="14" rx="2"/><rect x="14" y="5" width="7" height="14" rx="2"/><path d="M6 9h1M17 15h1"/></svg></div><h3>ハンドとレンジのEQ計算</h3><p>カード対カードだけでなく、ハンド対レンジも比較。結果は選択内容に合わせて自動で更新されます。</p></article>
-          <article class="feature"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h10l4 4v14H5V3Z"/><path d="M15 3v5h4M8 12h8M8 16h6"/></svg></div><h3>学びを持ち帰る</h3><p>学習データはJSONで保存でき、HTML学習レポートはブラウザで読み返せます。</p></article>
-          <article class="feature"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg></div><h3>8言語をアプリ内に収録</h3><p>日本語、英語、ドイツ語、スペイン語、フランス語、韓国語、ポルトガル語、繁体字中国語に対応します。</p></article>
+          <article class="feature"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2M9 2h6"/></svg></div><h3>ブラインド進行を一画面で</h3><p>現在レベル、次のレベル、残り時間と各席のスタックをまとめて確認できます</p></article>
+          <article class="feature green"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4"/><circle cx="12" cy="7" r="3"/><path d="M4 8a3 3 0 0 0-2 3v3M20 8a3 3 0 0 1 2 3v3"/></svg></div><h3>仲間と同じ卓を見る</h3><p>同じWi-Fi内の端末へ学習状況を共有し、ホストの更新を参加者もリアルタイムで確認できます</p></article>
+          <article class="feature green"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V9M10 19V5M16 19v-7M22 19V3"/></svg></div><h3>プレーの傾向を見つける</h3><p>参加率、レイズ率、収支をプレイヤー別・ポジション別に集計し、振り返るポイントを探せます</p></article>
+          <article class="feature gold"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="7" height="14" rx="2"/><rect x="14" y="5" width="7" height="14" rx="2"/><path d="M6 9h1M17 15h1"/></svg></div><h3>ハンドとレンジのEQ計算</h3><p>カード対カードだけでなくハンド対レンジも比較し、結果は選択内容に合わせて自動で更新されます</p></article>
+          <article class="feature"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h10l4 4v14H5V3Z"/><path d="M15 3v5h4M8 12h8M8 16h6"/></svg></div><h3>学びを持ち帰る</h3><p>学習データはJSONで保存でき、HTML学習レポートはブラウザで読み返せます</p></article>
+          <article class="feature"><div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg></div><h3>8言語をアプリ内に収録</h3><p>日本語、英語、ドイツ語、スペイン語、フランス語、韓国語、ポルトガル語、繁体字中国語に対応します</p></article>
         </div>
       </section>
 
       <section class="section" aria-labelledby="pro-title">
         <div class="pro">
-          <div><span class="badge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8L12 3Z"/></svg>STUDY PRO</span><h2 id="pro-title">あの一点を、<br />学びに。</h2><p>勉強会の作成、ホストとしてのWi-Fi共有、分析・出力、過去データの読み込みを使える買い切り機能です。ストアに表示される現在価格で購入できます。</p><p class="free">ハンドの記録と勉強会への参加は、無料で利用できます。</p></div>
+          <div><span class="badge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8L12 3Z"/></svg>STUDY PRO</span><h2 id="pro-title">あの一点を、<br />学びに</h2><p>勉強会の作成、ホストとしてのWi-Fi共有、分析・出力、過去データの読み込みを使える買い切り機能です<br />ストアに表示される現在価格で購入できます</p><p class="free">ハンドの記録と勉強会への参加は、無料で利用できます</p></div>
           <ul class="checks">
             <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>仲間と、一手の理由を話すための共有</li>
             <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>自分のプレーの癖を見つける分析</li>
@@ -343,12 +351,12 @@
 
       <section class="privacy" aria-labelledby="privacy-title">
         <div class="icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/><rect x="9" y="10" width="6" height="5" rx="1"/><path d="M10 10V8.8a2 2 0 0 1 4 0V10"/></svg></div>
-        <div><h2 id="privacy-title">勉強会の共有は、ローカルWi-Fi内で完結</h2><p>共有中の学習データを外部サーバーへ送信しません。参加パスワードと接続先を知る同じWi-Fi内の端末だけが参加できます。</p></div>
+        <div><h2 id="privacy-title">勉強会の共有は、ローカルWi-Fi内で完結</h2><p>共有中の学習データを外部サーバーへ送信しません<br />参加パスワードと接続先を知る同じWi-Fi内の端末だけが参加できます</p></div>
       </section>
 
       <section class="final" aria-labelledby="final-title">
-        <h2 id="final-title">次のトーナメントに、<br />学びが残る一席を。</h2>
-        <p>大会の運営から、仲間との勉強会、ひとりでの振り返りまで。Poker MTT Noteを卓のそばに。</p>
+        <h2 id="final-title">次のトーナメントに、<br />学びが残る一席を</h2>
+        <p>大会の運営から、仲間との勉強会、ひとりでの振り返りまで<br />Poker MTT Noteを卓のそばに</p>
         <div class="actions"><a class="button primary" href="https://apps.apple.com/app/id6760666099" target="_blank" rel="noopener">App Storeで見る</a></div>
       </section>
     </main>
