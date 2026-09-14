@@ -20,7 +20,13 @@
         "store_product_id": "poker.tournament.blind.floor.study_pro",
         "accepted_product_ids": ["poker.tournament.blind.floor.study_pro"],
         "purchase_enabled": true,
-        "promotions": []
+        "promotions": [
+          {
+            "percent_off": 50,
+            "starts_at": 1789344000,
+            "ends_at": 1789909200
+          }
+        ]
       }
     ]
   },
@@ -47,7 +53,13 @@
           "poker.tournament.blind.floor.study_pro"
         ],
         "purchase_enabled": true,
-        "promotions": []
+        "promotions": [
+          {
+            "percent_off": 50,
+            "starts_at": 1789344000,
+            "ends_at": 1789909200
+          }
+        ]
       }
     ]
   }
