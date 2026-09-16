@@ -35,7 +35,8 @@
   },
   "android": {
     "allowed_versions": [
-      "^2\\.0\\.0$"
+      "^2\\.0\\.0$",
+      "^2\\.0\\.1$"
     ],
     "force_update": false,
     "store_url": "https://play.google.com/store/apps/details?id=noas.poker.tournament.blind.floor",
