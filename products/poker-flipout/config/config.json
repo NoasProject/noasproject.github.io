@@ -1,5 +1,5 @@
 {
-  "config_version": "21",
+  "config_version": "22",
   "ios": {
     "allowed_versions": ["^1\\.1\\.3$", "^1\\.1\\.4$", "^1\\.1\\.5$", "^1\\.1\\.6$"],
     "force_update": true,
@@ -17,7 +17,7 @@
     "store_url": "https://apps.apple.com/app/id6790411264"
   },
   "android": {
-    "allowed_versions": ["^1\\.1\\.3$", "^1\\.1\\.4$", "^1\\.1\\.6$"],
+    "allowed_versions": ["^1\\.1\\.3$", "^1\\.1\\.4$", "^1\\.1\\.5$", "^1\\.1\\.6$"],
     "force_update": true,
     "can_purchase": true,
     "purchase_product_ids": [
@@ -30,6 +30,6 @@
       "stud_pack": "app.poker.flipout.iap.item.lock.002.b",
       "other_pack_vol_1": "app.poker.flipout.iap.item.lock.101.a"
     },
-    "store_url": ""
+    "store_url": "https://play.google.com/store/apps/details?id=noas.poker.flipout.pro"
   }
 }
