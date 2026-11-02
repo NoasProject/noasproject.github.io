@@ -3,7 +3,8 @@
     "allowed_versions": [
       "^2\\.0\\.0$",
       "^2\\.0\\.1$",
-      "^2\\.1\\.0$"
+      "^2\\.1\\.0$",
+      "^2\\.2\\.1$"
     ],
     "force_update": true,
     "store_url": "https://apps.apple.com/app/id6760666099",
@@ -38,7 +39,8 @@
     "allowed_versions": [
       "^2\\.0\\.0$",
       "^2\\.0\\.1$",
-      "^2\\.1\\.0$"
+      "^2\\.1\\.0$",
+      "^2\\.2\\.1$"
     ],
     "force_update": false,
     "store_url": "https://play.google.com/store/apps/details?id=noas.poker.tournament.blind.floor",
