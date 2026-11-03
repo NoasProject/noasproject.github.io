@@ -1,4 +1,5 @@
 import copy
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -111,6 +112,23 @@ class ConfigTests(unittest.TestCase):
         self.assertTrue(allows(self.config, 'ios', '2.1.42'))
         self.assertFalse(allows(self.config, 'ios', '2.0.1'))
         self.assertFalse(allows(self.config, 'ios', '12.0.0'))
+
+    def test_legacy_deny_all_versions(self):
+        config = load_config((CONFIG_DIR/'config.json').read_text())
+        for os in ('ios', 'android'):
+            config[os]['allowed_versions'] = ['^(?!)$']
+        validate(config, v2=False)
+        for os in ('ios', 'android'):
+            for version in ('0.0.0', '1.0.0', '1.1.0', '1.2.2', '1.2.3',
+                            '1.999.999', '2.2.1', '999.999.999'):
+                self.assertFalse(allows(config, os, version))
+        self.assertIsNone(re.search('^(?!)$', ''))
+        config['ios']['allowed_versions'].append(r'^1\.0\.0$')
+        with self.assertRaises(ValueError): validate(config, v2=False)
+
+    def test_deny_all_pattern_is_legacy_only(self):
+        self.config['ios']['allowed_versions'] = ['^(?!)$']
+        with self.assertRaises(ValueError): validate(self.config, v2=True)
 
     def test_duplicate_json_keys(self):
         with self.assertRaises(ValueError): load_config('{"ios":{},"ios":{}}')

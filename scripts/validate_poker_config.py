@@ -49,7 +49,10 @@ def validate(config, *, v2):
             raise ValueError(f'{os}.allowed_versions: nonempty array required')
         if any(not isinstance(value, str) for value in versions) or len(set(versions)) != len(versions):
             raise ValueError(f'{os}.allowed_versions: unique string patterns required')
-        for pattern in versions:
+        # Legacy apps treat [] as allowing every version. This fixed pattern
+        # matches no string and is the only exception to version patterns.
+        deny_all = not v2 and versions == ['^(?!)$']
+        for pattern in ([] if deny_all else versions):
             # A deliberate, safe subset shared by Dart/ECMAScript and Python.
             parts = pattern[1:-1].split(r'\.')
             if not pattern.startswith('^') or not pattern.endswith('$') or len(parts) != 3 or any(
