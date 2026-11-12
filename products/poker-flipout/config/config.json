@@ -1,7 +1,7 @@
 {
-  "config_version": "24",
+  "config_version": "25",
   "ios": {
-    "allowed_versions": ["^1\\.1\\.6$"],
+    "allowed_versions": ["^1\\.1\\.6$", "^1\\.1\\.7$"],
     "force_update": true,
     "can_purchase": true,
     "purchase_product_ids": [
