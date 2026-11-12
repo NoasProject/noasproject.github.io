@@ -1,5 +1,5 @@
 {
-  "config_version": "25",
+  "config_version": "26",
   "ios": {
     "allowed_versions": ["^1\\.1\\.6$", "^1\\.1\\.7$"],
     "force_update": true,
@@ -17,7 +17,7 @@
     "store_url": "https://apps.apple.com/app/id6790411264"
   },
   "android": {
-    "allowed_versions": ["^1\\.1\\.6$"],
+    "allowed_versions": ["^1\\.1\\.6$", "^1\\.1\\.7$"],
     "force_update": true,
     "can_purchase": true,
     "purchase_product_ids": [
